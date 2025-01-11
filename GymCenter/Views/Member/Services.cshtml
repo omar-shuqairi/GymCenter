@@ -1,0 +1,113 @@
+﻿@{
+    Layout = "~/Views/Shared/MemberLayout.cshtml";
+
+}
+
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/MemberDesign/img/breadcrumb-bg.jpg")">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb-text">
+                    <h2>Services</h2>
+                    <div class="bt-option">
+                        <a asp-action="Home">Home</a>
+                        <span>Services</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Pricing Section Begin -->
+<section class="pricing-section service-pricing spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <span>Our Plan</span>
+                    <h2>Choose your pricing plan</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <!-- Plan 1 -->
+            <div class="col-lg-4 col-md-8">
+                <form method="post" >
+                    <div class="ps-item">
+                        <h3>Class drop-in</h3>
+                        <div class="pi-price">
+                            <h2>$39.0</h2>
+                            <span>SINGLE CLASS</span>
+                        </div>
+                        <ul>
+                            <li>Free riding</li>
+                            <li>Unlimited equipment</li>
+                            <li>Personal trainer</li>
+                            <li>Weight losing classes</li>
+                            <li>Month to month</li>
+                            <li>No time restriction</li>
+                        </ul>
+                        <!-- Hidden input to store Plan ID -->
+                        <input type="hidden" name="PlanId" value="1">
+                        <!-- Submit button -->
+                        <button type="submit" class="primary-btn pricing-btn">Enroll now</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Plan 2 -->
+            <div class="col-lg-4 col-md-8">
+                <form method="post" action="/Membership/Signup">
+                    <div class="ps-item">
+                        <h3>12 Month unlimited</h3>
+                        <div class="pi-price">
+                            <h2>$99.0</h2>
+                            <span>SINGLE CLASS</span>
+                        </div>
+                        <ul>
+                            <li>Free riding</li>
+                            <li>Unlimited equipment</li>
+                            <li>Personal trainer</li>
+                            <li>Weight losing classes</li>
+                            <li>Month to month</li>
+                            <li>No time restriction</li>
+                        </ul>
+                        <!-- Hidden input to store Plan ID -->
+                        <input type="hidden" name="PlanId" value="2">
+                        <!-- Submit button -->
+                        <button type="submit" class="primary-btn pricing-btn">Enroll now</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Plan 3 -->
+            <div class="col-lg-4 col-md-8">
+                <form method="post" action="/Membership/Signup">
+                    <div class="ps-item">
+                        <h3>6 Month unlimited</h3>
+                        <div class="pi-price">
+                            <h2>$59.0</h2>
+                            <span>SINGLE CLASS</span>
+                        </div>
+                        <ul>
+                            <li>Free riding</li>
+                            <li>Unlimited equipment</li>
+                            <li>Personal trainer</li>
+                            <li>Weight losing classes</li>
+                            <li>Month to month</li>
+                            <li>No time restriction</li>
+                        </ul>
+                        <!-- Hidden input to store Plan ID -->
+                        <input type="hidden" name="PlanId" value="3">
+                        <!-- Submit button -->
+                        <button type="submit" class="primary-btn pricing-btn">Enroll now</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Pricing Section End -->

@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "~/Views/Shared/LoginAndRegisterLayout.cshtml";
+
+}
+
+
+<section class="registration" style="background: url('@Url.Content("~/GuestDesign/img/hero/hero-1.jpg")')">
+    <div class="registration-container">
+        <h1>Sign Up</h1>
+        <form id="signup-form">
+            <div class="input-box">
+                <label for="first-name"><i class="fa fa-user-circle"></i></label>
+                <input type="text" id="first-name" placeholder="First Name" required>
+            </div>
+
+            <div class="input-box">
+                <label for="last-name"><i class="fa fa-user-circle"></i></label>
+                <input type="text" id="last-name" placeholder="Last Name" required>
+            </div>
+
+            <div class="input-box">
+                <label for="email"><i class="fa fa-envelope"></i></label>
+                <input type="email" id="email" placeholder="Email" required>
+            </div>
+
+            <div class="input-box">
+                <label for="image"><i class="fa fa-image"></i></label>
+                <input type="file" id="image" accept="image/*" required>
+            </div>
+
+            <div class="input-box">
+                <label for="username"><i class="fa fa-user"></i></label>
+                <input type="text" id="username" placeholder="Username" required>
+            </div>
+
+
+            <div class="input-box">
+                <label for="password"><i class="fa fa-lock"></i></label>
+                <input type="password" id="password" placeholder="Password" required>
+            </div>
+
+            <input type="submit" value="Sign Up">
+        </form>
+        <p class="toggle">Already have an account? <a asp-action="Login">Login</a></p>
+    </div>
+</section>

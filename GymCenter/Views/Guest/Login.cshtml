@@ -1,0 +1,31 @@
+﻿@* @{
+    Layout = "~/Views/Shared/GuestLayout.cshtml";
+
+}
+
+<!--start login form -->
+<section class="registration" style="background: url('@Url.Content("~/GuestDesign/img/hero/hero-1.jpg")')">
+    <div class="registration-container">
+        <h1>Login</h1>
+        <form action="" method="POST" id="login-form">
+            <div class="input-box">
+                <label for="username"><i class="fa fa-user"></i></label>
+                <input type="text" id="username" name="username" placeholder="Username" required>
+            </div>
+
+            <div class="input-box">
+                <label for="password"><i class="fa fa-lock"></i></label>
+                <input type="password" id="password" name="password" placeholder="Password" required>
+            </div>
+
+            <input type="submit" value="Login">
+        </form>
+        <p class="toggle">Don't have an account? <a asp-action="SignUp">Sign Up</a></p>
+    </div>
+</section>
+<!--end login form -->
+
+<!-- Loader -->
+<div class="login-loader" id="login-loader">
+    <span></span>
+</div> *@

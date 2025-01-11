@@ -1,0 +1,132 @@
+﻿@{
+    Layout = "~/Views/Shared/MemberLayout.cshtml";
+
+}
+
+
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/MemberDesign/img/breadcrumb-bg.jpg")">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="breadcrumb-text">
+                    <h2>Profile</h2>
+                    <div class="bt-option">
+                        <a asp-action="Home">Home</a>
+                        <span>Profile</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section-profile">
+    <div class="profile-container">
+        <h2>View & Update Profile</h2>
+        <form id="profile-form"  method="post"
+              enctype="multipart/form-data">
+            <!-- Profile Picture -->
+            <div class="profile-pic">
+                <img src="Model.ProfilePicture" alt="Profile Picture" id="profilePreview">
+            </div>
+            <div class="parent-profile">
+                <div class="child-profile">
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name">fisrt Name</label>
+                        <input type="text" id="name" name="Name" value="Model.Name" required>
+                    </div>
+
+                    <!-- Phone -->
+                    <div class="form-group">
+                        <label for="phone">UserName</label>
+                        <input type="tel" id="phone" name="Phone" value="Model.Phone">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="profile-pic">Upload Profile Picture</label>
+                        <input type="file" id="profile-pic" name="ProfilePicture" accept="image/*"
+                               onchange="previewProfilePic(event)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" name="NewPassword" required>
+                    </div>
+
+                </div>
+
+
+                <div class="child-profile">
+
+                    <!-- Name -->
+                    <div class="form-group">
+                        <label for="name">last Name</label>
+                        <input type="text" id="name" name="Name" value="Model.Name" required>
+                    </div>
+
+                    <!-- Update Password -->
+                    <!-- <h3>Update Password</h3> -->
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="Email" value="Model.Email" required>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" name="CurrentPassword" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" name="ConfirmPassword" required>
+                    </div>
+
+                </div>
+
+
+
+            </div>
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">Save Changes</button>
+
+        </form>
+    </div>
+
+</section>
+
+<script>
+    function previewProfilePic(event) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            const output = document.getElementById('profilePreview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    const profileform = document.getElementById('profile-form');
+    profileform.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // Save a reference to the form
+        const form = this;
+
+        // Show a SweetAlert message
+        Swal.fire({
+            title: 'Done!',
+            text: 'Your profile has been updated successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        }).then(() => {
+            // Submit the form programmatically after the alert
+            form.submit();
+        });
+    });
+</script>

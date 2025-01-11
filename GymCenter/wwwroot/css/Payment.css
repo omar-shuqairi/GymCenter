@@ -1,0 +1,104 @@
+﻿/* General Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: rgb(21, 21, 21);
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+.payment-container {
+    text-align: center;
+    padding: 40px 30px 52px;
+    border: 1px solid #464646;
+    -webkit-transition: all 0.5s;
+    -o-transition: all 0.5s;
+    transition: all 0.5s;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+
+    .payment-container:hover {
+        background: #ffffff;
+        border-color: #ffffff;
+    }
+
+        .payment-container:hover label {
+            color: #111111;
+        }
+
+        .payment-container:hover .submit-btn {
+            background: #f36100;
+        }
+
+
+    .payment-container h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: rgb(243, 97, 0);
+    }
+
+    .payment-container .payment-form {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .payment-container .form-group {
+        margin-bottom: 15px;
+    }
+
+    .payment-container label {
+        font-size: 14px;
+        font-weight: bold;
+        color: #f36100;
+    }
+
+    .payment-container input {
+        width: 100%;
+        padding: 10px;
+        font-size: 14px;
+        margin-top: 5px;
+        border: 1px solid #111111;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+
+        .payment-container input:focus {
+            border-color: #f36100;
+            outline: none;
+        }
+
+    .payment-container button.submit-btn {
+        padding: 12px;
+        background-color: #333333;
+        color: white;
+        font-size: 16px;
+        font-weight: bold;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+        .payment-container button.submit-btn:hover {
+            background: #f44336
+        }
+
+    .payment-container input[readonly] {
+        background-color: #ffffff
+    }
+
+@media (max-width: 600px) {
+    .payment-container {
+        padding: 15px;
+    }
+}

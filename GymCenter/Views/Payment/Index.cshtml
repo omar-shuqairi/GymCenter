@@ -1,0 +1,70 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Payment Page">
+    <title>Payment Page</title>
+    <link rel="stylesheet" href="~/css/Payment.css">
+</head>
+<body>
+
+    <div class="payment-container">
+        <h2>Payment Details</h2>
+
+        <form  method="POST" class="payment-form" id="payment-form">
+            <div class="form-group">
+                <label for="cardNumber">Card Number</label>
+                <input type="text" id="cardNumber" name="cardNumber" placeholder="Enter your card number" required>
+            </div>
+
+            <div class="form-group">
+                <label for="expiryDate">Expiration Date</label>
+                <input type="month" id="expiryDate" name="expiryDate" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="text" id="cvv" name="cvv" placeholder="Enter CVV" required>
+            </div>
+
+            <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="text" id="amount" name="amount" value="$99.99" readonly>
+            </div>
+
+            <button type="submit" class="submit-btn">Pay Now</button>
+        </form>
+    </div>
+
+
+    <!-- Include SweetAlert Library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        const pay = document.getElementById('payment-form');
+        pay.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            // Save a reference to the form
+            const form = this;
+
+            // Show a SweetAlert message
+            Swal.fire({
+                title: 'Done!',
+                text: 'Thank you for subscribing to our plans!',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+            allowEscapeKey: false
+            }).then(() => {
+                // Submit the form programmatically after the alert
+                form.submit();
+            });
+        });
+    </script>
+</body>
+</html>
