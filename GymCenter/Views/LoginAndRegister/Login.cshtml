@@ -1,7 +1,10 @@
-﻿@{
+﻿@model GymCenter.Models.UserLogin
+
+@{
     Layout = "~/Views/Shared/LoginAndRegisterLayout.cshtml";
 
 }
+
 
 <!--start login form -->
 <section class="registration" style="background: url('@Url.Content("~/GuestDesign/img/hero/hero-1.jpg")')">
@@ -9,13 +12,13 @@
         <h1>Login</h1>
         <form  method="POST" id="login-form">
             <div class="input-box">
-                <label for="username"><i class="fa fa-user"></i></label>
-                <input type="text" id="username" name="username" placeholder="Username" required>
+                <label asp-for="Username"><i class="fa fa-user"></i></label>
+                <input asp-for="Username" type="text" placeholder="Username" required>
             </div>
 
             <div class="input-box">
-                <label for="password"><i class="fa fa-lock"></i></label>
-                <input type="password" id="password" name="password" placeholder="Password" required>
+                <label asp-for="Passwordd"><i class="fa fa-lock"></i></label>
+                <input asp-for="Passwordd" type="password" placeholder="Password" required>
             </div>
 
             <input type="submit" value="Login">

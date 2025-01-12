@@ -27,3 +27,4 @@ public partial class User
 
     public virtual ICollection<UserLogin> UserLogins { get; set; } = new List<UserLogin>();
 }
+
