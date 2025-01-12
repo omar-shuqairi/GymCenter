@@ -40,7 +40,7 @@
                 @Html.DisplayFor(modelItem => item.Email)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.ImagePath)
+                    <img src=@Url.Content("~/images/"+item.ImagePath) asp-append-version=true width="100" height="100" />
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Userid">Edit</a> |

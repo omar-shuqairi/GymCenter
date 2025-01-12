@@ -12,18 +12,20 @@ namespace GymCenter.Controllers
     public class UsersController : Controller
     {
         private readonly ModelContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public UsersController(ModelContext context)
+        public UsersController(ModelContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Users
         public async Task<IActionResult> Index()
         {
-              return _context.Users != null ? 
-                          View(await _context.Users.ToListAsync()) :
-                          Problem("Entity set 'ModelContext.Users'  is null.");
+            return _context.Users != null ?
+                        View(await _context.Users.ToListAsync()) :
+                        Problem("Entity set 'ModelContext.Users'  is null.");
         }
 
         // GET: Users/Details/5
@@ -55,10 +57,25 @@ namespace GymCenter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Userid,Fname,Lname,Email,ImagePath")] User user)
+        public async Task<IActionResult> Create([Bind("Userid,Fname,Lname,Email,ImageFile")] User user)
         {
             if (ModelState.IsValid)
             {
+
+                if (user.ImageFile != null)
+                {
+                    string wwwRootpath = _webHostEnvironment.WebRootPath;
+                    string filename = Guid.NewGuid().ToString() + "_" + user.ImageFile.FileName;
+                    string path = Path.Combine(wwwRootpath + "/images/", filename);
+
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await user.ImageFile.CopyToAsync(fileStream);
+                    }
+                    user.ImagePath = filename;
+                }
+
+
                 _context.Add(user);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -87,7 +104,7 @@ namespace GymCenter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("Userid,Fname,Lname,Email,ImagePath")] User user)
+        public async Task<IActionResult> Edit(decimal id, [Bind("Userid,Fname,Lname,Email,ImageFile")] User user)
         {
             if (id != user.Userid)
             {
@@ -98,6 +115,18 @@ namespace GymCenter.Controllers
             {
                 try
                 {
+                    if (user.ImageFile != null)
+                    {
+                        string wwwRootpath = _webHostEnvironment.WebRootPath;
+                        string filename = Guid.NewGuid().ToString() + "_" + user.ImageFile.FileName;
+                        string path = Path.Combine(wwwRootpath + "/images/", filename);
+
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await user.ImageFile.CopyToAsync(fileStream);
+                        }
+                        user.ImagePath = filename;
+                    }
                     _context.Update(user);
                     await _context.SaveChangesAsync();
                 }
@@ -149,14 +178,14 @@ namespace GymCenter.Controllers
             {
                 _context.Users.Remove(user);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UserExists(decimal id)
         {
-          return (_context.Users?.Any(e => e.Userid == id)).GetValueOrDefault();
+            return (_context.Users?.Any(e => e.Userid == id)).GetValueOrDefault();
         }
     }
 }
