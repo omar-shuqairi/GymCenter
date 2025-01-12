@@ -34,13 +34,13 @@
                 @Html.DisplayFor(modelItem => item.Sitename)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SiteImagePath)
+                    <img src=@Url.Content("~/images/"+item.SiteImagePath) asp-append-version=true width="100" height="100" />
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.LogoImagePath)
+                    <img src=@Url.Content("~/images/"+item.LogoImagePath) asp-append-version=true width="100" height="100" />
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.SharedImagePath)
+                    <img src=@Url.Content("~/images/"+item.SharedImagePath) asp-append-version=true width="100" height="100" />
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

@@ -17,5 +17,11 @@ public partial class Siteinfo
     public string? SharedImagePath { get; set; }
 
     [NotMapped]
-    public virtual IFormFile ImageFile { get; set; }
+    public virtual IFormFile? SiteImageFile { get; set; }
+
+    [NotMapped]
+    public virtual IFormFile? LogoImageFile { get; set; }
+
+    [NotMapped]
+    public virtual IFormFile? SharedImageFile { get; set; }
 }
