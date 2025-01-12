@@ -87,7 +87,7 @@
                 <div class="collapse" id="dashboard">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="/kaiadmin-lite-1.2.0/">
+                      <a asp-action="Home">
                         <span class="sub-item">Dashboard</span>
                       </a>
                     </li>
@@ -223,7 +223,7 @@
                 <div class="collapse" id="maps">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="maps/googlemaps.html">
+                      <a asp-action="Search">
                         <span class="sub-item">Subscriptions table</span>
                       </a>
                     </li>
@@ -485,7 +485,7 @@
                   >
                     <div class="avatar-sm">
                       <img
-                                        src=@Url.Content("~/images/"+@ViewData["AdminImg"])
+                        src=@Url.Content("~/images/"+@ViewData["AdminImg"])
                         alt="..."
                         class="avatar-img rounded-circle"
                       />
@@ -502,7 +502,7 @@
                         <div class="user-box">
                           <div class="avatar-lg">
                             <img
-                                                src=@Url.Content("~/images/"+@ViewData["AdminImg"])
+                             src=@Url.Content("~/images/"+@ViewData["AdminImg"])
                               alt="image profile"
                               class="avatar-img rounded"
                             />

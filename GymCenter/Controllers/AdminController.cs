@@ -60,5 +60,72 @@ namespace GymCenter.Controllers
                 .OrderBy(r => r.Year)
                 .ToListAsync();
         }
+
+
+        public IActionResult Search()
+        {
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+
+            var memberDetails = from member in _context.Members
+                                join user in _context.Users on member.Userid equals user.Userid
+                                select new JoinMemberUserTables
+                                {
+                                    Fname = user.Fname,
+                                    Lname = user.Lname,
+                                    SubscriptionStart = member.SubscriptionStart,
+                                    SubscriptionEnd = member.SubscriptionEnd
+                                };
+
+            var result = memberDetails.ToList();
+
+            return View(result);
+
+        }
+        [HttpPost]
+        public IActionResult Search(DateTime? startDate, DateTime? endDate)
+        {
+            var memberDetails = from member in _context.Members
+                                join user in _context.Users on member.Userid equals user.Userid
+                                select new JoinMemberUserTables
+                                {
+                                    Fname = user.Fname,
+                                    Lname = user.Lname,
+                                    SubscriptionStart = member.SubscriptionStart,
+                                    SubscriptionEnd = member.SubscriptionEnd
+                                };
+
+            var result = memberDetails.ToList();
+            if (startDate == null && endDate == null)
+            {
+                ViewBag.TotalSubscriptions = result.Where(m => m.SubscriptionStart != null && m.SubscriptionEnd != null).Count();
+                return View(result);
+            }
+            else if (startDate != null && endDate == null)
+            {
+                result = result.Where(x => x.SubscriptionStart.HasValue && x.SubscriptionStart.Value.Date >= startDate).ToList();
+                ViewBag.TotalSubscriptions = result.Where(m => m.SubscriptionStart != null && m.SubscriptionEnd != null).Count();
+                return View(result);
+            }
+            else if (startDate == null && endDate != null)
+            {
+
+
+                result = result.Where(x => x.SubscriptionStart.HasValue && x.SubscriptionStart.Value.Date <= endDate).ToList();
+                ViewBag.TotalSubscriptions = result.Where(m => m.SubscriptionStart != null && m.SubscriptionEnd != null).Count();
+                return View(result);
+            }
+
+            else
+            {
+                result = result.Where(x => x.SubscriptionStart.HasValue && x.SubscriptionStart.Value.Date >= startDate && x.SubscriptionEnd.HasValue && x.SubscriptionEnd.Value.Date <= endDate).ToList();
+                ViewBag.TotalSubscriptions = result.Where(m => m.SubscriptionStart != null && m.SubscriptionEnd != null).Count();
+
+            }
+            return View(result);
+
+        }
+
     }
 }
