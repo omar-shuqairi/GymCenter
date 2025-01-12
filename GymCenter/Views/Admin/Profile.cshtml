@@ -1,0 +1,112 @@
+﻿@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+@model GymCenter.Models.JoinAdminUserTables
+<section class="section-profile">
+    <div class="profile-container">
+        <h2>View & Update Profile</h2>
+        <form id="profile-form" method="post" enctype="multipart/form-data">
+            <input type="hidden" asp-for="Userid"/>
+            <!-- Profile Picture -->
+            <div class="profile-pic">
+                <img src=@Url.Content("~/images/"+@ViewData["AdminImg"]) alt="Profile Picture" id="profilePreview">
+            </div>
+            <div class="parent-profile">
+                <div class="child-profile">
+
+                    <!-- Fname Name -->
+                    <div class="form-group">
+                        <label for="Fname">fisrt Name</label>
+                        <input type="text" id="Fname" name="Fname" value="@Model.Fname" required>
+                    </div>
+
+                    <!-- Username -->
+                    <div class="form-group">
+                        <label for="Username">UserName</label>
+                        <input type="text" id="Username" name="Username" value="@Model.Username">
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="ImageFile">Upload Profile Picture</label>
+                        <input type="file" id="ImageFile" name="ImageFile" accept="image/*"
+                               onchange="previewProfilePic(event)">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="NewPassword">New Password</label>
+                        <input type="password" id="NewPassword" name="NewPassword" required>
+                    </div>
+
+                </div>
+
+
+                <div class="child-profile">
+
+                    <!-- Last Name -->
+                    <div class="form-group">
+                        <label for="Lname">last Name</label>
+                        <input type="text" id="Lname" name="Lname" value="@Model.Lname" required>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="form-group">
+                        <label for="Email">Email Address</label>
+                        <input type="email" id="Email" name="Email" value="@Model.Email" required>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="CurrentPassword">Current Password</label>
+                        <input type="password" id="CurrentPassword" name="CurrentPassword" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ConfirmPassword">Confirm New Password</label>
+                        <input type="password" id="ConfirmPassword" name="ConfirmPassword" required>
+                    </div>
+
+                </div>
+            </div>
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn">Save Changes</button>
+
+        </form>
+    </div>
+
+</section>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function previewProfilePic(event) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            const output = document.getElementById('profilePreview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+
+    const profileform = document.getElementById('profile-form');
+    profileform.addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        // Save a reference to the form
+        const form = this;
+
+        // Show a SweetAlert message
+        Swal.fire({
+            title: 'Done!',
+            text: 'Your profile has been updated successfully!',
+            icon: 'success',
+            confirmButtonText: 'OK',
+            allowOutsideClick: false,
+            allowEscapeKey: false
+        }).then(() => {
+            // Submit the form programmatically after the alert
+            form.submit();
+        });
+    });
+</script>

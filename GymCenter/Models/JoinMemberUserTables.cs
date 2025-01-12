@@ -1,4 +1,6 @@
-﻿namespace GymCenter.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace GymCenter.Models
 {
     public class JoinMemberUserTables
     {
@@ -23,5 +25,7 @@
         //public virtual Workoutplan? Plan { get; set; }
 
         //public virtual User? User { get; set; }
+        [NotMapped]
+        public virtual IFormFile ImageFile { get; set; }
     }
 }
