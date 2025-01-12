@@ -12,18 +12,20 @@ namespace GymCenter.Controllers
     public class HomepagesController : Controller
     {
         private readonly ModelContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomepagesController(ModelContext context)
+        public HomepagesController(ModelContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Homepages
         public async Task<IActionResult> Index()
         {
-              return _context.Homepages != null ? 
-                          View(await _context.Homepages.ToListAsync()) :
-                          Problem("Entity set 'ModelContext.Homepages'  is null.");
+            return _context.Homepages != null ?
+                        View(await _context.Homepages.ToListAsync()) :
+                        Problem("Entity set 'ModelContext.Homepages'  is null.");
         }
 
         // GET: Homepages/Details/5
@@ -55,10 +57,24 @@ namespace GymCenter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ImagePath,Title1,Title2,Titlebtn")] Homepage homepage)
+        public async Task<IActionResult> Create([Bind("Id,ImageFile,Title1,Title2,Titlebtn")] Homepage homepage)
         {
             if (ModelState.IsValid)
             {
+
+                if (homepage.ImageFile != null)
+                {
+                    string wwwRootpath = _webHostEnvironment.WebRootPath;
+                    string filename = Guid.NewGuid().ToString() + "_" + homepage.ImageFile.FileName;
+                    string path = Path.Combine(wwwRootpath + "/images/", filename);
+
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await homepage.ImageFile.CopyToAsync(fileStream);
+                    }
+                    homepage.ImagePath = filename;
+                }
+
                 _context.Add(homepage);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -87,7 +103,7 @@ namespace GymCenter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("Id,ImagePath,Title1,Title2,Titlebtn")] Homepage homepage)
+        public async Task<IActionResult> Edit(decimal id, [Bind("Id,ImageFile,Title1,Title2,Titlebtn")] Homepage homepage)
         {
             if (id != homepage.Id)
             {
@@ -98,6 +114,18 @@ namespace GymCenter.Controllers
             {
                 try
                 {
+                    if (homepage.ImageFile != null)
+                    {
+                        string wwwRootpath = _webHostEnvironment.WebRootPath;
+                        string filename = Guid.NewGuid().ToString() + "_" + homepage.ImageFile.FileName;
+                        string path = Path.Combine(wwwRootpath + "/images/", filename);
+
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await homepage.ImageFile.CopyToAsync(fileStream);
+                        }
+                        homepage.ImagePath = filename;
+                    }
                     _context.Update(homepage);
                     await _context.SaveChangesAsync();
                 }
@@ -149,14 +177,14 @@ namespace GymCenter.Controllers
             {
                 _context.Homepages.Remove(homepage);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool HomepageExists(decimal id)
         {
-          return (_context.Homepages?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Homepages?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

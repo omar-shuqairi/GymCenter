@@ -31,7 +31,8 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.ImagePath)
+               @*  @Html.DisplayFor(modelItem => item.ImagePath) *@
+                    <img src=@Url.Content("~/images/"+item.ImagePath) asp-append-version=true width="100" height="100" />
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title1)
