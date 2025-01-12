@@ -1,0 +1,48 @@
+﻿@model GymCenter.Models.Aboutuspage
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Aboutuspage</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Paragraph1)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Paragraph1)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Paragraph2)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Paragraph2)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Videourl)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Videourl)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Backgroundvideoimg)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Backgroundvideoimg)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    <a asp-action="Index">Back to List</a>
+</div>

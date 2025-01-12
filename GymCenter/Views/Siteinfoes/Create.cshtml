@@ -1,0 +1,45 @@
+﻿@model GymCenter.Models.Siteinfo
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Siteinfo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Sitename" class="control-label"></label>
+                <input asp-for="Sitename" class="form-control" />
+                <span asp-validation-for="Sitename" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SiteImagePath" class="control-label"></label>
+                <input asp-for="SiteImagePath" class="form-control" />
+                <span asp-validation-for="SiteImagePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LogoImagePath" class="control-label"></label>
+                <input asp-for="LogoImagePath" class="form-control" />
+                <span asp-validation-for="LogoImagePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="SharedImagePath" class="control-label"></label>
+                <input asp-for="SharedImagePath" class="form-control" />
+                <span asp-validation-for="SharedImagePath" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

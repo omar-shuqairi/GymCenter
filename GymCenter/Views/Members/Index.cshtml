@@ -1,0 +1,53 @@
+﻿@model IEnumerable<GymCenter.Models.Member>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.SubscriptionStart)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubscriptionEnd)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Plan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubscriptionStart)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubscriptionEnd)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Plan.Planid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Userid)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Memberid">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Memberid">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Memberid">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

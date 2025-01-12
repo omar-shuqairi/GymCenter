@@ -1,0 +1,51 @@
+﻿@model GymCenter.Models.Aboutuspage
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Aboutuspage</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Paragraph1" class="control-label"></label>
+                <input asp-for="Paragraph1" class="form-control" />
+                <span asp-validation-for="Paragraph1" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Paragraph2" class="control-label"></label>
+                <input asp-for="Paragraph2" class="form-control" />
+                <span asp-validation-for="Paragraph2" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Videourl" class="control-label"></label>
+                <input asp-for="Videourl" class="form-control" />
+                <span asp-validation-for="Videourl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Backgroundvideoimg" class="control-label"></label>
+                <input asp-for="Backgroundvideoimg" class="form-control" />
+                <span asp-validation-for="Backgroundvideoimg" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
