@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GymCenter.Models;
 
@@ -14,6 +15,9 @@ public partial class User
     public string? Email { get; set; }
 
     public string? ImagePath { get; set; }
+
+    [NotMapped]
+    public virtual IFormFile ImageFile { get; set; }
 
     public virtual ICollection<Member> Members { get; set; } = new List<Member>();
 

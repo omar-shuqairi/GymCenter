@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GymCenter.Models;
 
@@ -16,4 +17,6 @@ public partial class Aboutuspage
     public string? Videourl { get; set; }
 
     public string? Backgroundvideoimg { get; set; }
+    [NotMapped]
+    public virtual IFormFile ImageFile { get; set; }
 }

@@ -12,18 +12,20 @@ namespace GymCenter.Controllers
     public class AboutuspagesController : Controller
     {
         private readonly ModelContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public AboutuspagesController(ModelContext context)
+        public AboutuspagesController(ModelContext context, IWebHostEnvironment webHostEnvironment)
         {
             _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         // GET: Aboutuspages
         public async Task<IActionResult> Index()
         {
-              return _context.Aboutuspages != null ? 
-                          View(await _context.Aboutuspages.ToListAsync()) :
-                          Problem("Entity set 'ModelContext.Aboutuspages'  is null.");
+            return _context.Aboutuspages != null ?
+                        View(await _context.Aboutuspages.ToListAsync()) :
+                        Problem("Entity set 'ModelContext.Aboutuspages'  is null.");
         }
 
         // GET: Aboutuspages/Details/5
@@ -87,7 +89,7 @@ namespace GymCenter.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("Id,Title,Paragraph1,Paragraph2,Videourl,Backgroundvideoimg")] Aboutuspage aboutuspage)
+        public async Task<IActionResult> Edit(decimal id, [Bind("Id,Title,Paragraph1,Paragraph2,Videourl,ImageFile")] Aboutuspage aboutuspage)
         {
             if (id != aboutuspage.Id)
             {
@@ -98,6 +100,20 @@ namespace GymCenter.Controllers
             {
                 try
                 {
+                    if (aboutuspage.ImageFile != null)
+                    {
+                        string wwwRootpath = _webHostEnvironment.WebRootPath;
+                        string filename = Guid.NewGuid().ToString() + "_" + aboutuspage.ImageFile.FileName;
+                        string path = Path.Combine(wwwRootpath + "/images/", filename);
+
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await aboutuspage.ImageFile.CopyToAsync(fileStream);
+                        }
+                        aboutuspage.Backgroundvideoimg = filename;
+                    }
+
+
                     _context.Update(aboutuspage);
                     await _context.SaveChangesAsync();
                 }
@@ -149,14 +165,14 @@ namespace GymCenter.Controllers
             {
                 _context.Aboutuspages.Remove(aboutuspage);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AboutuspageExists(decimal id)
         {
-          return (_context.Aboutuspages?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Aboutuspages?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace GymCenter.Models;
 
@@ -14,4 +15,7 @@ public partial class Siteinfo
     public string? LogoImagePath { get; set; }
 
     public string? SharedImagePath { get; set; }
+
+    [NotMapped]
+    public virtual IFormFile ImageFile { get; set; }
 }

@@ -46,7 +46,8 @@
                 @Html.DisplayFor(modelItem => item.Videourl)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Backgroundvideoimg)
+                @* @Html.DisplayFor(modelItem => item.Backgroundvideoimg) *@
+                    <img src=@Url.Content("~/images/"+item.Backgroundvideoimg) asp-append-version=true width="100" height="100" />
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
