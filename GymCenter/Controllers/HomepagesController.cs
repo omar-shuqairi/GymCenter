@@ -23,6 +23,9 @@ namespace GymCenter.Controllers
         // GET: Homepages
         public async Task<IActionResult> Index()
         {
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
             return _context.Homepages != null ?
                         View(await _context.Homepages.ToListAsync()) :
                         Problem("Entity set 'ModelContext.Homepages'  is null.");
@@ -49,6 +52,9 @@ namespace GymCenter.Controllers
         // GET: Homepages/Create
         public IActionResult Create()
         {
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
             return View();
         }
 
@@ -85,6 +91,9 @@ namespace GymCenter.Controllers
         // GET: Homepages/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
             if (id == null || _context.Homepages == null)
             {
                 return NotFound();
@@ -148,6 +157,9 @@ namespace GymCenter.Controllers
         // GET: Homepages/Delete/5
         public async Task<IActionResult> Delete(decimal? id)
         {
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
             if (id == null || _context.Homepages == null)
             {
                 return NotFound();

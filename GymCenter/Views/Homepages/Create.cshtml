@@ -1,45 +1,48 @@
 ﻿@model GymCenter.Models.Homepage
 
 @{
-    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
-<h1>Create</h1>
+<h1 class="text-center mb-4">Create Homepage Entry</h1>
 
-<h4>Homepage</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ImageFile" class="control-label"></label>
-                <input asp-for="ImageFile" class="form-control" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title1" class="control-label"></label>
-                <input asp-for="Title1" class="form-control" />
-                <span asp-validation-for="Title1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Title2" class="control-label"></label>
-                <input asp-for="Title2" class="form-control" />
-                <span asp-validation-for="Title2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Titlebtn" class="control-label"></label>
-                <input asp-for="Titlebtn" class="form-control" />
-                <span asp-validation-for="Titlebtn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="card shadow-lg p-4">
+    <h4 class="card-title text-primary">Add New Homepage Details</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <form asp-action="Create" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="mb-3">
+                    <label asp-for="ImageFile" class="form-label fw-bold">Upload Image</label>
+                    <input asp-for="ImageFile" class="form-control" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Title1" class="form-label fw-bold">Title 1</label>
+                    <input asp-for="Title1" class="form-control" />
+                    <span asp-validation-for="Title1" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Title2" class="form-label fw-bold">Title 2</label>
+                    <input asp-for="Title2" class="form-control" />
+                    <span asp-validation-for="Title2" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Titlebtn" class="form-label fw-bold">Button Title</label>
+                    <input asp-for="Titlebtn" class="form-control" />
+                    <span asp-validation-for="Titlebtn" class="text-danger"></span>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
