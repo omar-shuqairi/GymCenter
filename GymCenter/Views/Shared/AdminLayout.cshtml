@@ -48,7 +48,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
+            <a asp-controller="Admin" asp-action="Home" class="logo">
               <img
                 src="~/DashDesign/assets/img/kaiadmin/logo_light.svg"
                 alt="navbar brand"
@@ -87,7 +87,7 @@
                 <div class="collapse" id="dashboard">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a asp-action="Home">
+                                        <a asp-controller="Admin" asp-action="Home">
                         <span class="sub-item">Dashboard</span>
                       </a>
                     </li>
@@ -109,7 +109,7 @@
                 <div class="collapse" id="base">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="components/avatars.html">
+                      <a asp-controller="Users" asp-action="Index">
                         <span class="sub-item">Members table</span>
                       </a>
                     </li>
@@ -223,7 +223,7 @@
                 <div class="collapse" id="maps">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a asp-action="Search">
+                      <a asp-controller="Admin" asp-action="Search">
                         <span class="sub-item">Subscriptions table</span>
                       </a>
                     </li>
@@ -327,7 +327,7 @@
           <div class="main-header-logo">
             <!-- Logo Header -->
             <div class="logo-header" data-background-color="dark">
-              <a href="index.html" class="logo">
+                        <a asp-controller="Admin" asp-action="Home" class="logo">
                 <img
                   src="~/DashDesign/assets/img/kaiadmin/logo_light.svg"
                   alt="navbar brand"
@@ -517,7 +517,7 @@
                       </li>
                       <li>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" asp-action="Profile">My Profile</a>
+                                        <a class="dropdown-item" asp-controller="Admin" asp-action="Profile">My Profile</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="#">Logout</a>
                       </li>
