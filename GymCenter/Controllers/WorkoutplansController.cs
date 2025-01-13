@@ -21,7 +21,10 @@ namespace GymCenter.Controllers
         // GET: Workoutplans
         public async Task<IActionResult> Index()
         {
-              return _context.Workoutplans != null ? 
+            ViewData["TrainerFullName"] = HttpContext.Session.GetString("TrainerFullName");
+            ViewData["TrainerEmail"] = HttpContext.Session.GetString("TrainerEmail");
+            ViewData["TrainerImg"] = HttpContext.Session.GetString("TrainerImg");
+            return _context.Workoutplans != null ?
                           View(await _context.Workoutplans.ToListAsync()) :
                           Problem("Entity set 'ModelContext.Workoutplans'  is null.");
         }
@@ -29,6 +32,9 @@ namespace GymCenter.Controllers
         // GET: Workoutplans/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {
+            ViewData["TrainerFullName"] = HttpContext.Session.GetString("TrainerFullName");
+            ViewData["TrainerEmail"] = HttpContext.Session.GetString("TrainerEmail");
+            ViewData["TrainerImg"] = HttpContext.Session.GetString("TrainerImg");
             if (id == null || _context.Workoutplans == null)
             {
                 return NotFound();
@@ -47,6 +53,9 @@ namespace GymCenter.Controllers
         // GET: Workoutplans/Create
         public IActionResult Create()
         {
+            ViewData["TrainerFullName"] = HttpContext.Session.GetString("TrainerFullName");
+            ViewData["TrainerEmail"] = HttpContext.Session.GetString("TrainerEmail");
+            ViewData["TrainerImg"] = HttpContext.Session.GetString("TrainerImg");
             return View();
         }
 
@@ -69,6 +78,9 @@ namespace GymCenter.Controllers
         // GET: Workoutplans/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
+            ViewData["TrainerFullName"] = HttpContext.Session.GetString("TrainerFullName");
+            ViewData["TrainerEmail"] = HttpContext.Session.GetString("TrainerEmail");
+            ViewData["TrainerImg"] = HttpContext.Session.GetString("TrainerImg");
             if (id == null || _context.Workoutplans == null)
             {
                 return NotFound();
@@ -120,6 +132,9 @@ namespace GymCenter.Controllers
         // GET: Workoutplans/Delete/5
         public async Task<IActionResult> Delete(decimal? id)
         {
+            ViewData["TrainerFullName"] = HttpContext.Session.GetString("TrainerFullName");
+            ViewData["TrainerEmail"] = HttpContext.Session.GetString("TrainerEmail");
+            ViewData["TrainerImg"] = HttpContext.Session.GetString("TrainerImg");
             if (id == null || _context.Workoutplans == null)
             {
                 return NotFound();
@@ -149,14 +164,14 @@ namespace GymCenter.Controllers
             {
                 _context.Workoutplans.Remove(workoutplan);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool WorkoutplanExists(decimal id)
         {
-          return (_context.Workoutplans?.Any(e => e.Planid == id)).GetValueOrDefault();
+            return (_context.Workoutplans?.Any(e => e.Planid == id)).GetValueOrDefault();
         }
     }
 }
