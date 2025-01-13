@@ -21,7 +21,10 @@ namespace GymCenter.Controllers
         // GET: Footers
         public async Task<IActionResult> Index()
         {
-              return _context.Footers != null ? 
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+            return _context.Footers != null ?
                           View(await _context.Footers.ToListAsync()) :
                           Problem("Entity set 'ModelContext.Footers'  is null.");
         }
@@ -29,6 +32,9 @@ namespace GymCenter.Controllers
         // GET: Footers/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Footers == null)
             {
                 return NotFound();
@@ -47,6 +53,9 @@ namespace GymCenter.Controllers
         // GET: Footers/Create
         public IActionResult Create()
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             return View();
         }
 
@@ -69,6 +78,9 @@ namespace GymCenter.Controllers
         // GET: Footers/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Footers == null)
             {
                 return NotFound();
@@ -120,6 +132,9 @@ namespace GymCenter.Controllers
         // GET: Footers/Delete/5
         public async Task<IActionResult> Delete(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Footers == null)
             {
                 return NotFound();
@@ -149,14 +164,14 @@ namespace GymCenter.Controllers
             {
                 _context.Footers.Remove(footer);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool FooterExists(decimal id)
         {
-          return (_context.Footers?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Footers?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

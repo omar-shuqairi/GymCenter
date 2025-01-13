@@ -23,6 +23,9 @@ namespace GymCenter.Controllers
         // GET: Siteinfoes
         public async Task<IActionResult> Index()
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             return _context.Siteinfos != null ?
                         View(await _context.Siteinfos.ToListAsync()) :
                         Problem("Entity set 'ModelContext.Siteinfos'  is null.");
@@ -31,6 +34,9 @@ namespace GymCenter.Controllers
         // GET: Siteinfoes/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Siteinfos == null)
             {
                 return NotFound();
@@ -49,6 +55,9 @@ namespace GymCenter.Controllers
         // GET: Siteinfoes/Create
         public IActionResult Create()
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             return View();
         }
 
@@ -71,6 +80,9 @@ namespace GymCenter.Controllers
         // GET: Siteinfoes/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Siteinfos == null)
             {
                 return NotFound();
@@ -185,6 +197,9 @@ namespace GymCenter.Controllers
         // GET: Siteinfoes/Delete/5
         public async Task<IActionResult> Delete(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Siteinfos == null)
             {
                 return NotFound();

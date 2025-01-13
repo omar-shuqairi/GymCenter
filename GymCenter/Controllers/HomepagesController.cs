@@ -34,6 +34,9 @@ namespace GymCenter.Controllers
         // GET: Homepages/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Homepages == null)
             {
                 return NotFound();

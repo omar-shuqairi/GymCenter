@@ -21,7 +21,10 @@ namespace GymCenter.Controllers
         // GET: Whychooseus
         public async Task<IActionResult> Index()
         {
-              return _context.Whychooseus != null ? 
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+            return _context.Whychooseus != null ?
                           View(await _context.Whychooseus.ToListAsync()) :
                           Problem("Entity set 'ModelContext.Whychooseus'  is null.");
         }
@@ -29,6 +32,9 @@ namespace GymCenter.Controllers
         // GET: Whychooseus/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Whychooseus == null)
             {
                 return NotFound();
@@ -47,6 +53,9 @@ namespace GymCenter.Controllers
         // GET: Whychooseus/Create
         public IActionResult Create()
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             return View();
         }
 
@@ -69,6 +78,9 @@ namespace GymCenter.Controllers
         // GET: Whychooseus/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Whychooseus == null)
             {
                 return NotFound();
@@ -120,6 +132,9 @@ namespace GymCenter.Controllers
         // GET: Whychooseus/Delete/5
         public async Task<IActionResult> Delete(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Whychooseus == null)
             {
                 return NotFound();
@@ -149,14 +164,14 @@ namespace GymCenter.Controllers
             {
                 _context.Whychooseus.Remove(whychooseu);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool WhychooseuExists(decimal id)
         {
-          return (_context.Whychooseus?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Whychooseus?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }
