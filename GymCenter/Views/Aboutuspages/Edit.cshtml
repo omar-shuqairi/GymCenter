@@ -1,51 +1,61 @@
 ﻿@model GymCenter.Models.Aboutuspage
 
 @{
-    ViewData["Title"] = "Edit";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
 
-<h1>Edit</h1>
+<div class="container" style="margin-top: 5.5rem;">
+    <div class="card shadow-lg">
+        <div class="card-header text-white">
+            <h1 class="card-title">Edit About Us Page</h1>
+        </div>
+        <div class="card-body">
+            <h4 class="mb-4">About Us Details</h4>
+            <form asp-action="Edit" enctype="multipart/form-data" class="needs-validation" novalidate>
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+                <input type="hidden" asp-for="Id" />
 
-<h4>Aboutuspage</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit" enctype="multipart/form-data">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Paragraph1" class="control-label"></label>
-                <input asp-for="Paragraph1" class="form-control" />
-                <span asp-validation-for="Paragraph1" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Paragraph2" class="control-label"></label>
-                <input asp-for="Paragraph2" class="form-control" />
-                <span asp-validation-for="Paragraph2" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Videourl" class="control-label"></label>
-                <input asp-for="Videourl" class="form-control" />
-                <span asp-validation-for="Videourl" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageFile" class="control-label"></label>
-                <input asp-for="ImageFile" class="form-control" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+                <!-- Title -->
+                <div class="form-group mb-3">
+                    <label asp-for="Title" class="form-label fw-bold">Title</label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <!-- Paragraph 1 -->
+                <div class="form-group mb-3">
+                    <label asp-for="Paragraph1" class="form-label fw-bold">Paragraph 1</label>
+                    <textarea asp-for="Paragraph1" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Paragraph1" class="text-danger"></span>
+                </div>
+
+                <!-- Paragraph 2 -->
+                <div class="form-group mb-3">
+                    <label asp-for="Paragraph2" class="form-label fw-bold">Paragraph 2</label>
+                    <textarea asp-for="Paragraph2" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Paragraph2" class="text-danger"></span>
+                </div>
+
+                <!-- Video URL -->
+                <div class="form-group mb-3">
+                    <label asp-for="Videourl" class="form-label fw-bold">Video URL</label>
+                    <input asp-for="Videourl" class="form-control" />
+                    <span asp-validation-for="Videourl" class="text-danger"></span>
+                </div>
+
+                <!-- Image File -->
+                <div class="form-group mb-4">
+                    <label asp-for="ImageFile" class="form-label fw-bold">Background Video Image</label>
+                    <input asp-for="ImageFile" type="file" class="form-control" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                    <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-

@@ -23,6 +23,9 @@ namespace GymCenter.Controllers
         // GET: Aboutuspages
         public async Task<IActionResult> Index()
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             return _context.Aboutuspages != null ?
                         View(await _context.Aboutuspages.ToListAsync()) :
                         Problem("Entity set 'ModelContext.Aboutuspages'  is null.");
@@ -49,6 +52,9 @@ namespace GymCenter.Controllers
         // GET: Aboutuspages/Create
         public IActionResult Create()
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             return View();
         }
 
@@ -71,6 +77,9 @@ namespace GymCenter.Controllers
         // GET: Aboutuspages/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Aboutuspages == null)
             {
                 return NotFound();
@@ -136,6 +145,9 @@ namespace GymCenter.Controllers
         // GET: Aboutuspages/Delete/5
         public async Task<IActionResult> Delete(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Aboutuspages == null)
             {
                 return NotFound();
