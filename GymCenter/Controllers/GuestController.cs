@@ -26,9 +26,19 @@ namespace GymCenter.Controllers
 
         }
 
-        public IActionResult About()
+        public async Task<IActionResult> About()
         {
-            return View();
+
+            var aboutus = await _context.Aboutuspages.FirstOrDefaultAsync();
+            var choose = await _context.Whychooseus.ToListAsync();
+            var shredimg = await _context.Siteinfos
+            .Select(s => s.SharedImagePath)
+            .FirstOrDefaultAsync();
+
+            var model = Tuple.Create(aboutus, choose, shredimg);
+
+
+            return View(model);
         }
 
         public IActionResult Services()
