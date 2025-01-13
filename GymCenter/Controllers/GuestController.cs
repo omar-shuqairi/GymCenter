@@ -1,21 +1,29 @@
 ﻿using GymCenter.Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 
 namespace GymCenter.Controllers
 {
     public class GuestController : Controller
     {
+        private readonly ModelContext _context;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly ILogger<GuestController> _logger;
 
-        public GuestController(ILogger<GuestController> logger)
+        public GuestController(ILogger<GuestController> logger, ModelContext context, IWebHostEnvironment webHostEnvironment)
         {
             _logger = logger;
+            _context = context;
+            _webHostEnvironment = webHostEnvironment;
         }
 
-        public IActionResult Home()
+        public async Task<IActionResult> Home()
         {
-            return View();
+            var homepageList = await _context.Homepages.ToListAsync();
+            return View(homepageList);
+
         }
 
         public IActionResult About()
