@@ -267,5 +267,11 @@ namespace GymCenter.Controllers
 
             return View(await modelContext.ToListAsync());
         }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Home", "Guest");
+        }
     }
 }
