@@ -1,0 +1,35 @@
+﻿@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+}
+
+@model IEnumerable<GymCenter.Models.Testimonial>
+
+@{
+    ViewData["Title"] = "Testimonials";
+}
+
+<div class="container mt-4">
+    <h2 class="text-center mb-4">Testimonials</h2>
+
+    <table class="table table-striped table-hover table-bordered align-middle">
+        <thead class="table-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Content)</th>
+                <th>@Html.DisplayNameFor(model => model.Status)</th>
+                <th>@Html.DisplayNameFor(model => model.User.Fname)</th>
+                <th>@Html.DisplayNameFor(model => model.User.Lname)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Content)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td>@Html.DisplayFor(modelItem => item.User.Fname)</td>
+                    <td>@Html.DisplayFor(modelItem => item.User.Lname)</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

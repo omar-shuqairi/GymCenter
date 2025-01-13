@@ -199,5 +199,73 @@ namespace GymCenter.Controllers
 
 
 
+
+        public async Task<IActionResult> ApprovedTestimonials()
+        {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+            var modelContext = _context.Testimonials
+                          .Where(t => t.Status == "Approved")
+                          .Include(t => t.User);
+
+            return View(await modelContext.ToListAsync());
+        }
+
+        // POST: Approve Testimonial
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ApprovedTestimonials(decimal? id)
+        {
+            var testimonial = await _context.Testimonials.FindAsync(id);
+            if (testimonial != null)
+            {
+                testimonial.Status = "Approved"; // Set status to approved
+                _context.Update(testimonial);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(PendingTestimonials)); // Redirect back to the pending testimonials page
+        }
+
+        public async Task<IActionResult> RejectedTestimonials()
+        {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+
+            var modelContext = _context.Testimonials
+                          .Where(t => t.Status == "Rejected")
+                          .Include(t => t.User);
+
+            return View(await modelContext.ToListAsync());
+
+        }
+
+        // POST: Reject Testimonial
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RejectedTestimonials(decimal? id)
+        {
+            var testimonial = await _context.Testimonials.FindAsync(id);
+            if (testimonial != null)
+            {
+                testimonial.Status = "Rejected"; // Set status to rejected
+                _context.Update(testimonial);
+                await _context.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(PendingTestimonials)); // Redirect back to the pending testimonials page
+        }
+
+        public async Task<IActionResult> PendingTestimonials()
+        {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+            var modelContext = _context.Testimonials
+                          .Where(t => t.Status == "Pending")
+                          .Include(t => t.User);
+
+            return View(await modelContext.ToListAsync());
+        }
     }
 }
