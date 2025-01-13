@@ -1,11 +1,28 @@
-﻿@{
+﻿@model IEnumerable<GymCenter.Models.Member>
+
+@{
     Layout = "~/Views/Shared/TrainerLayout.cshtml";
-
 }
-
-
-
-
 <div class="card-body">
-    <!-- here the list of members from db -->
+    <table class="table">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Workout Plan</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var member in Model)
+            {
+                <tr>
+                    <td>@(member.User != null ? member.User.Fname : "N/A")</td>
+                    <td>@(member.User != null ? member.User.Lname : "N/A")</td>
+                    <td>@(member.User != null ? member.User.Email : "N/A")</td>
+                    <td>@(member.Plan != null ? member.Plan.Planname : "No Plan")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

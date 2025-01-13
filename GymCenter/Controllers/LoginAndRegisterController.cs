@@ -40,9 +40,11 @@ namespace GymCenter.Controllers
 
                         return RedirectToAction("Home", "Admin");
 
-                    case 2://Trainer 
+                    case 2://Trainer
+                        HttpContext.Session.SetInt32("TrainerUserId", (int)auth.Userid);
                         HttpContext.Session.SetString("TrainerFullName", Fname + " " + Lname);
                         HttpContext.Session.SetString("TrainerEmail", EmailUser);
+                        HttpContext.Session.SetString("TrainerImg", imgpath);
                         return RedirectToAction("Home", "Trainer");
 
                     case 3://Member 

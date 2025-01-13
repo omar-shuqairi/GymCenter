@@ -48,7 +48,7 @@
         <div class="sidebar-logo">
           <!-- Logo Header -->
           <div class="logo-header" data-background-color="dark">
-            <a href="index.html" class="logo">
+                    <a asp-controller="Trainer" asp-action="Home" class="logo">
               <img
                 src="~/DashDesign/assets/img/kaiadmin/logo_light.svg"
                 alt="navbar brand"
@@ -87,7 +87,7 @@
                 <div class="collapse" id="dashboard">
                   <ul class="nav nav-collapse">
                     <li>
-                      <a href="/kaiadmin-lite-1.2.0/">
+                      <a asp-controller="Trainer" asp-action="Home">
                         <span class="sub-item">Dashboard</span>
                       </a>
                     </li>
@@ -332,7 +332,7 @@
           <div class="main-header-logo">
             <!-- Logo Header -->
             <div class="logo-header" data-background-color="dark">
-              <a href="index.html" class="logo">
+                        <a asp-controller="Trainer" asp-action="Home" class="logo">
                 <img
                   src="~/DashDesign/assets/img/kaiadmin/logo_light.svg"
                   alt="navbar brand"
@@ -489,15 +489,14 @@
                     aria-expanded="false"
                   >
                     <div class="avatar-sm">
-                      <img
-                        src="~/DashDesign/assets/img/profile.jpg"
+                                        <img src=@Url.Content("~/images/"+@ViewData["TrainerImg"])
                         alt="..."
                         class="avatar-img rounded-circle"
                       />
                     </div>
                     <span class="profile-username">
                       <span class="op-7">Hi,</span>
-                      <span class="fw-bold">Hizrian</span>
+                                        <span class="fw-bold">@ViewData["TrainerFullName"]</span>
                     </span>
                   </a>
                   <ul class="dropdown-menu dropdown-user animated fadeIn">
@@ -505,15 +504,14 @@
                       <li>
                         <div class="user-box">
                           <div class="avatar-lg">
-                            <img
-                              src="~/DashDesign/assets/img/profile.jpg"
+                            <img src=@Url.Content("~/images/"+@ViewData["TrainerImg"])
                               alt="image profile"
                               class="avatar-img rounded"
                             />
                           </div>
                           <div class="u-text">
-                            <h4>Hizrian</h4>
-                            <p class="text-muted">hello@example.com</p>
+                                                <h4>@ViewData["TrainerFullName"]</h4>
+                                                <p class="text-muted">@ViewData["TrainerEmail"]</p>
 
                           </div>
                         </div>
@@ -539,7 +537,7 @@
               class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4"
             >
               <div>
-                <h3 class="fw-bold mb-3">Welcome, model.adminname</h3>
+                <h3 class="fw-bold mb-3">Welcome, @ViewData["TrainerFullName"]</h3>
               </div>
             </div>
             <div class="row">
