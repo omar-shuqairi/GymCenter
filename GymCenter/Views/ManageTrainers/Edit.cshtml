@@ -1,0 +1,52 @@
+﻿@model GymCenter.Models.JoinTrainerUserTables
+
+@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+<div class="container my-5 d-flex justify-content-center align-items-center">
+    <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%;">
+        <h4 class="text-center mt-3">Edit Trainer</h4>
+        <hr />
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            <input type="hidden" asp-for="Userid" />
+            <div class="form-group">
+                <label asp-for="Fname" class="form-label"></label>
+                <input asp-for="Fname" class="form-control" />
+                <span asp-validation-for="Fname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Lname" class="form-label"></label>
+                <input asp-for="Lname" class="form-control" />
+                <span asp-validation-for="Lname" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Username" class="form-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Passwordd" class="form-label"></label>
+                <input asp-for="Passwordd" class="form-control" type="password" />
+                <span asp-validation-for="Passwordd" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="form-label"></label>
+                <input asp-for="Email" class="form-control" type="email" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageFile" class="form-label"></label>
+                <input asp-for="ImageFile" class="form-control" type="file" />
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
+            </div>
+            <div class="d-grid">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+        <div class="mt-3 text-center">
+            <a asp-controller="ManageTrainers" asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,55 @@
+﻿@{
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
+}
+@model IEnumerable<GymCenter.Models.JoinTrainerUserTables>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+
+<div class="container-xl mt-4">
+    <h1 class="mb-4 text-center">Index</h1>
+
+    <p>
+        <a asp-action="Create" class="btn btn-primary mb-3">Create New</a>
+    </p>
+
+    <table class="table table-bordered table-hover table-striped align-middle text-center">
+        <thead class="table-dark">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.Fname)</th>
+                <th>@Html.DisplayNameFor(model => model.Lname)</th>
+                <th>@Html.DisplayNameFor(model => model.Username)</th>
+                <th>@Html.DisplayNameFor(model => model.Passwordd)</th>
+                <th>@Html.DisplayNameFor(model => model.Email)</th>
+                <th>@Html.DisplayNameFor(model => model.ImagePath)</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Fname)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Lname)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Username)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Passwordd)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td>
+                        <img src="@Url.Content("~/images/" + item.ImagePath)" asp-append-version="true" class="img-thumbnail" style="width: 100px; height: 100px;" />
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a asp-controller="ManageTrainers" asp-action="Edit" asp-route-id="@item.Userid" class="btn btn-sm btn-warning">Edit</a>
+                            <a asp-controller="ManageTrainers" asp-action="Details" asp-route-id="@item.Userid" class="btn btn-sm btn-info text-white">Details</a>
+                            <a asp-controller="ManageTrainers" asp-action="Delete" asp-route-id="@item.Userid" class="btn btn-sm btn-danger">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
