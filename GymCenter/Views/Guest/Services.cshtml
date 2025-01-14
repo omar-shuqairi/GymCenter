@@ -2,10 +2,10 @@
     Layout = "~/Views/Shared/GuestLayout.cshtml";
 
 }
-
+@model Tuple<List<GymCenter.Models.Workoutplan>,string>
 
 <!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/GuestDesign/img/breadcrumb-bg.jpg")">
+<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/images/" + Model.Item2)">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -33,60 +33,28 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            <div class="col-lg-4 col-md-8">
-                <div class="ps-item">
-                    <h3>Class drop-in</h3>
-                    <div class="pi-price">
-                        <h2>$ 39.0</h2>
-                        <span>SINGLE CLASS</span>
+            @foreach(var item in Model.Item1)
+            {
+                <div class="col-lg-4 col-md-8">
+                    <div class="ps-item">
+                        <h3>@item.Durationinmonths Month</h3>
+                        <div class="pi-price">
+                            <h2>$ @item.Price</h2>
+                            <span>@item.Planname</span>
+                        </div>
+                        <h3>Exercise Routines</h3>
+                        <ul>
+                            <li>@item.ExerciseRoutines</li>
+                        </ul>
+                        <h3>Goals</h3>
+                        <ul>
+                            <li>@item.Goals</li>
+                        </ul>
+                        <a asp-controller="LoginAndRegister" asp-action="Login" class="primary-btn pricing-btn">Enroll now</a>
                     </div>
-                    <ul>
-                        <li>Free riding</li>
-                        <li>Unlimited equipments</li>
-                        <li>Personal trainer</li>
-                        <li>Weight losing classes</li>
-                        <li>Month to mouth</li>
-                        <li>No time restriction</li>
-                    </ul>
-                    <a href="#" class="primary-btn pricing-btn">Enroll now</a>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-8">
-                <div class="ps-item">
-                    <h3>12 Month unlimited</h3>
-                    <div class="pi-price">
-                        <h2>$ 99.0</h2>
-                        <span>SINGLE CLASS</span>
-                    </div>
-                    <ul>
-                        <li>Free riding</li>
-                        <li>Unlimited equipments</li>
-                        <li>Personal trainer</li>
-                        <li>Weight losing classes</li>
-                        <li>Month to mouth</li>
-                        <li>No time restriction</li>
-                    </ul>
-                    <a href="#" class="primary-btn pricing-btn">Enroll now</a>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-8">
-                <div class="ps-item">
-                    <h3>6 Month unlimited</h3>
-                    <div class="pi-price">
-                        <h2>$ 59.0</h2>
-                        <span>SINGLE CLASS</span>
-                    </div>
-                    <ul>
-                        <li>Free riding</li>
-                        <li>Unlimited equipments</li>
-                        <li>Personal trainer</li>
-                        <li>Weight losing classes</li>
-                        <li>Month to mouth</li>
-                        <li>No time restriction</li>
-                    </ul>
-                    <a href="#" class="primary-btn pricing-btn">Enroll now</a>
-                </div>
-            </div>
+                
+            }
         </div>
     </div>
 </section>

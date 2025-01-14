@@ -41,9 +41,15 @@ namespace GymCenter.Controllers
             return View(model);
         }
 
-        public IActionResult Services()
+        public async Task<IActionResult> Services()
         {
-            return View();
+
+            var workoutplans = await _context.Workoutplans.ToListAsync();
+            var shredimg = await _context.Siteinfos
+            .Select(s => s.SharedImagePath)
+            .FirstOrDefaultAsync();
+            var model = Tuple.Create(workoutplans, shredimg);
+            return View(model);
         }
 
         public IActionResult Testimonials()
@@ -56,20 +62,6 @@ namespace GymCenter.Controllers
             return View();
         }
 
-        public IActionResult Login()
-        {
-            return View();
-        }
-
-        public IActionResult SignUp()
-        {
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
-        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
