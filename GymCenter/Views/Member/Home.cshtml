@@ -2,35 +2,25 @@
     Layout = "~/Views/Shared/MemberLayout.cshtml";
 
 }
-<!-- Hero Section Begin -->
+@model IEnumerable<GymCenter.Models.Homepage>
 <section class="hero-section">
     <div class="hs-slider owl-carousel">
-        <div class="hs-item set-bg" data-setbg="@Url.Content("~/MemberDesign/img/hero/hero-1.jpg")">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 offset-lg-6">
-                        <div class="hi-text">
-                            <span>Shape your body</span>
-                            <h1>Be <strong>strong</strong> traning hard</h1>
+
+        @foreach (var item in Model)
+        {
+            <div class="hs-item set-bg" data-setbg="@Url.Content("~/images/" + item.ImagePath)">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 offset-lg-6">
+                            <div class="hi-text">
+                                <span>@item.Title1</span>
+                                <h1>@item.Title2</h1>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <div class="hs-item set-bg" data-setbg="@Url.Content("~/MemberDesign/img/hero/hero-2.jpg")">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-6 offset-lg-6">
-                        <div class="hi-text">
-                            <span>Shape your body</span>
-                            <h1>Be <strong>strong</strong> traning hard</h1>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+        }
     </div>
 </section>
 <!-- Hero Section End -->
