@@ -3,12 +3,10 @@
 
 }
 
-
-
-
+@model Tuple<List<GymCenter.Models.Testimonial>, string>
 
 <!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/GuestDesign/img/breadcrumb-bg.jpg")">
+<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/images/" + Model.Item2)">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -37,40 +35,24 @@
             </div>
         </div>
         <div class="ts_slider owl-carousel">
+            @foreach(var item in Model.Item1)
+            {
             <div class="ts_item">
                 <div class="row">
                     <div class="col-lg-12 text-center">
                         <div class="ti_pic">
-                            <img src="@Url.Content("~/GuestDesign/img/testimonial/testimonial-1.jpg")" alt="">
+                                <img src="@Url.Content("~/images/" + item.User.ImagePath)" alt="">
                         </div>
                         <div class="ti_text">
                             <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                incididunt<br /> ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices
-                                gravida. Risus commodo<br /> viverra maecenas accumsan lacus vel facilisis.
+                                @item.Content
                             </p>
-                            <h5>Marshmello Gomez</h5>
+                            <h5>@item.User.Fname @item.User.Lname</h5>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="ts_item">
-                <div class="row">
-                    <div class="col-lg-12 text-center">
-                        <div class="ti_pic">
-                            <img src="@Url.Content("~/GuestDesign/img/testimonial/testimonial-2.jpg")" alt="">
-                        </div>
-                        <div class="ti_text">
-                            <p>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-                                incididunt<br /> ut labore et dolore magna aliqua. Quis ipsum suspendisse ultrices
-                                gravida. Risus commodo<br /> viverra maecenas accumsan lacus vel facilisis.
-                            </p>
-                            <h5>Marshmello Gomez</h5>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            }
         </div>
     </div>
 </section>

@@ -52,9 +52,18 @@ namespace GymCenter.Controllers
             return View(model);
         }
 
-        public IActionResult Testimonials()
+        public async Task<IActionResult> Testimonials()
         {
-            return View();
+            var testimonials = await _context.Testimonials
+            .Include(t => t.User)
+            .Where(t => t.Status == "Approved")
+            .ToListAsync();
+            var shredimg = await _context.Siteinfos
+            .Select(s => s.SharedImagePath)
+            .FirstOrDefaultAsync();
+
+            var model = Tuple.Create(testimonials, shredimg);
+            return View(model);
         }
 
         public IActionResult Contact()
