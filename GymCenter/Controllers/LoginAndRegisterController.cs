@@ -90,7 +90,7 @@ namespace GymCenter.Controllers
                         return RedirectToAction("Home", "Trainer");
 
                     case 3://Member 
-                        HttpContext.Session.SetInt32("userId", (int)auth.Userid);
+                        HttpContext.Session.SetInt32("MemberuserId", (int)auth.Userid);
                         HttpContext.Session.SetString("MemberEmail", EmailUser);
                         return RedirectToAction("Home", "Member");
                 }

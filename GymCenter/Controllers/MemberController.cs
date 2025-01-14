@@ -2,6 +2,7 @@
 using GymCenter.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.Metrics;
 
 namespace GymCenter.Controllers
 {
@@ -40,7 +41,7 @@ namespace GymCenter.Controllers
             return View(model);
         }
 
-
+        //here edit this to subscribe and form from memberdesgin 
         public async Task<IActionResult> Services()
         {
 
@@ -52,9 +53,44 @@ namespace GymCenter.Controllers
             return View(model);
         }
 
-        public IActionResult Testimonials()
+
+
+
+
+
+
+
+
+
+
+        public async Task<IActionResult> Testimonials()
         {
-            return View();
+            var testimonials = await _context.Testimonials
+            .Include(t => t.User)
+            .Where(t => t.Status == "Approved")
+            .ToListAsync();
+            var shredimg = await _context.Siteinfos
+            .Select(s => s.SharedImagePath)
+            .FirstOrDefaultAsync();
+
+            var model = Tuple.Create(testimonials, shredimg);
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Testimonials(string content)
+        {
+            if (ModelState.IsValid)
+            {
+                int? memberuserid = HttpContext.Session.GetInt32("MemberuserId");
+                var testimonial = new Testimonial();
+                testimonial.Userid = memberuserid;
+                testimonial.Content = content;
+                testimonial.Status = "Pending";
+                _context.Add(testimonial);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Testimonials));
+            }
+            return View(content);
         }
 
         public async Task<IActionResult> Contact()
@@ -92,6 +128,12 @@ namespace GymCenter.Controllers
             return View(contactform);
         }
 
+
+
+
+
+
+
         public IActionResult Profile()
         {
             return View();
@@ -104,7 +146,8 @@ namespace GymCenter.Controllers
 
         public IActionResult Logout()
         {
-            return View();
+            HttpContext.Session.Clear();
+            return RedirectToAction("Home", "Guest");
         }
     }
 }
