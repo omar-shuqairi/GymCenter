@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 using System.Diagnostics;
 
 namespace GymCenter.Controllers
@@ -66,11 +67,29 @@ namespace GymCenter.Controllers
             return View(model);
         }
 
-        public IActionResult Contact()
+        public async Task<IActionResult> Contact()
         {
-            return View();
-        }
+            var shredimg = await _context.Siteinfos
+            .Select(s => s.SharedImagePath)
+            .FirstOrDefaultAsync();
 
+            var contactinfo = await _context.Contactus.FirstOrDefaultAsync();
+
+            var model = Tuple.Create(contactinfo, shredimg);
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Contact([Bind("Guestname,Guestemail,Guestcomment")] Contactform contactform)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(contactform);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Contact));
+            }
+            return View(contactform);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
