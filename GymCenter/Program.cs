@@ -1,4 +1,5 @@
 using GymCenter.Models;
+using GymCenter.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,9 @@ builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(60);
 });
+
+builder.Services.AddSingleton<EmailService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
