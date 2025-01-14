@@ -15,6 +15,48 @@ namespace GymCenter.Controllers
             _context = context;
             _webHostEnvironment = webHostEnvironment;
         }
+
+        public IActionResult SignUp()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SignUp([Bind("Userid,Fname,Lname,Email,ImagePath,ImageFile")] User user, string username, string password)
+        {
+            if (ModelState.IsValid)
+            {
+                if (user.ImageFile != null)
+                {
+                    string wwwRootpath = _webHostEnvironment.WebRootPath;
+                    string filename = Guid.NewGuid().ToString() + "_" + user.ImageFile.FileName;
+                    string path = Path.Combine(wwwRootpath + "/images/", filename);
+
+                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    {
+                        await user.ImageFile.CopyToAsync(fileStream);
+                    }
+                    user.ImagePath = filename;
+
+                }
+                _context.Add(user);
+                await _context.SaveChangesAsync();
+                UserLogin login = new UserLogin();
+                login.Username = username;
+                login.Passwordd = password;
+                login.Userid = user.Userid;
+                login.Roleid = 3;
+                _context.Add(login);
+                await _context.SaveChangesAsync();
+                Member member = new Member();
+                member.Userid = user.Userid;
+                _context.Add(member);
+                await _context.SaveChangesAsync();
+                return RedirectToAction("Login");
+            }
+            return View(user);
+        }
         public IActionResult Login()
         {
             return View();
@@ -55,11 +97,6 @@ namespace GymCenter.Controllers
 
             }
 
-            return View();
-        }
-
-        public IActionResult SignUp()
-        {
             return View();
         }
     }

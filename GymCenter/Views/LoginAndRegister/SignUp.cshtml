@@ -3,40 +3,40 @@
 
 }
 
-
+@model GymCenter.Models.User
 <section class="registration" style="background: url('@Url.Content("~/GuestDesign/img/hero/hero-1.jpg")')">
     <div class="registration-container">
         <h1>Sign Up</h1>
-        <form id="signup-form">
+        <form id="signup-form" method="post" enctype="multipart/form-data">
             <div class="input-box">
-                <label for="first-name"><i class="fa fa-user-circle"></i></label>
-                <input type="text" id="first-name" placeholder="First Name" required>
+                <label asp-for="Fname"><i class="fa fa-user-circle"></i></label>
+                <input asp-for="Fname" type="text" placeholder="First Name" required>
             </div>
 
             <div class="input-box">
-                <label for="last-name"><i class="fa fa-user-circle"></i></label>
-                <input type="text" id="last-name" placeholder="Last Name" required>
+                <label asp-for="Lname"><i class="fa fa-user-circle"></i></label>
+                <input asp-for="Lname" placeholder="Last Name" required>
             </div>
 
             <div class="input-box">
-                <label for="email"><i class="fa fa-envelope"></i></label>
-                <input type="email" id="email" placeholder="Email" required>
+                <label asp-for="Email"><i class="fa fa-envelope"></i></label>
+                <input asp-for="Email"  placeholder="Email" required>
             </div>
 
             <div class="input-box">
-                <label for="image"><i class="fa fa-image"></i></label>
-                <input type="file" id="image" accept="image/*" required>
+                <label asp-for="ImageFile"><i class="fa fa-image"></i></label>
+                <input asp-for="ImageFile" type="file" accept="image/*" required>
             </div>
 
             <div class="input-box">
                 <label for="username"><i class="fa fa-user"></i></label>
-                <input type="text" id="username" placeholder="Username" required>
+                <input type="text" id="username" name="username" placeholder="Username" required>
             </div>
 
 
             <div class="input-box">
                 <label for="password"><i class="fa fa-lock"></i></label>
-                <input type="password" id="password" placeholder="Password" required>
+                <input type="password" id="password" name="password" placeholder="Password" required>
             </div>
 
             <input type="submit" value="Sign Up">
