@@ -92,6 +92,7 @@ namespace GymCenter.Controllers
                     case 3://Member 
                         HttpContext.Session.SetInt32("MemberuserId", (int)auth.Userid);
                         HttpContext.Session.SetString("MemberEmail", EmailUser);
+                        HttpContext.Session.SetString("MemberImg", imgpath);
                         return RedirectToAction("Home", "Member");
                 }
 
