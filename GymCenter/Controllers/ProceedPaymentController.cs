@@ -36,7 +36,7 @@ namespace GymCenter.Controllers
             }
             if (dbCreditCard.Balance < amount)
             {
-                return BadRequest("Insufficient balance.");
+                return NotFound("Insufficient balance.");
             }
             dbCreditCard.Balance -= amount;
             _context.Creditcards.Update(dbCreditCard);
@@ -53,7 +53,7 @@ namespace GymCenter.Controllers
             var member = await _context.Members.FirstOrDefaultAsync(m => m.Userid == memberUserId);
             if (member == null)
             {
-                return NotFound("Credit card not found.");
+                return NotFound("Member not found.");
             }
             member.SubscriptionStart = DateTime.Now;
             member.SubscriptionEnd = DateTime.Now.AddMonths(Durationinmonths);
