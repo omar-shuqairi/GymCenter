@@ -2,9 +2,9 @@
     Layout = "~/Views/Shared/MemberLayout.cshtml";
 
 }
-
+@model GymCenter.Models.Member
 <!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/MemberDesign/img/breadcrumb-bg.jpg")">
+<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/images/" + ViewBag.SharedImage)">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -33,20 +33,20 @@
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-8">
                 <div class="ps-item">
-                    <h3>Class drop-in</h3>
+                    <h3>@Model.Plan.Durationinmonths Month</h3>
                     <div class="pi-price">
-                        <h2>$ 39.0</h2>
-                        <span>SINGLE CLASS</span>
+                        <h2>$ @Model.Plan.Price</h2>
+                        <span>@Model.Plan.Planname</span>
                     </div>
+                    <h3>Exercise Routines</h3>
                     <ul>
-                        <li>Free riding</li>
-                        <li>Unlimited equipments</li>
-                        <li>Personal trainer</li>
-                        <li>Weight losing classes</li>
-                        <li>Month to mouth</li>
-                        <li>No time restriction</li>
+                        <li>@Model.Plan.ExerciseRoutines</li>
                     </ul>
-                    <a href="#" class="primary-btn pricing-btn">Enroll now</a>
+                    <h3>Goals</h3>
+                    <ul>
+                        <li>@Model.Plan.Goals</li>
+                    </ul>
+                    <h3>your Subscription end at @Model.SubscriptionEnd.Value.ToShortDateString()</h3>
                 </div>
             </div>
         </div>

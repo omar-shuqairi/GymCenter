@@ -240,9 +240,19 @@ namespace GymCenter.Controllers
 
 
 
-        public IActionResult MyPlan()
+        public async Task<IActionResult> MyPlan()
         {
-            return View();
+            int? memberuserid = HttpContext.Session.GetInt32("MemberuserId");
+            var shredimg = await _context.Siteinfos
+            .Select(s => s.SharedImagePath)
+            .FirstOrDefaultAsync();
+            ViewBag.SharedImage = shredimg;
+            var member = await _context.Members
+            .Include(m => m.Plan)
+            .Where(m => m.Userid == memberuserid)
+            .FirstOrDefaultAsync();
+
+            return View(member);
         }
 
 
