@@ -47,6 +47,12 @@ body {
         color: rgb(243, 97, 0);
     }
 
+    .payment-container h3 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: rgb(243, 97, 0);
+    }
+
     .payment-container .payment-form {
         display: flex;
         flex-direction: column;
