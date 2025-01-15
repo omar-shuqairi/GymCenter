@@ -19,6 +19,8 @@ public partial class User
     [NotMapped]
     public virtual IFormFile ImageFile { get; set; }
 
+    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+
     public virtual ICollection<Member> Members { get; set; } = new List<Member>();
 
     public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
@@ -27,4 +29,3 @@ public partial class User
 
     public virtual ICollection<UserLogin> UserLogins { get; set; } = new List<UserLogin>();
 }
-

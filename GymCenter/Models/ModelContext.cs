@@ -27,6 +27,8 @@ public partial class ModelContext : DbContext
 
     public virtual DbSet<Homepage> Homepages { get; set; }
 
+    public virtual DbSet<Invoice> Invoices { get; set; }
+
     public virtual DbSet<Member> Members { get; set; }
 
     public virtual DbSet<Payment> Payments { get; set; }
@@ -216,6 +218,41 @@ public partial class ModelContext : DbContext
                 .HasMaxLength(20)
                 .IsUnicode(false)
                 .HasColumnName("TITLEBTN");
+        });
+
+        modelBuilder.Entity<Invoice>(entity =>
+        {
+            entity.HasKey(e => e.Invoiceid).HasName("SYS_C008700");
+
+            entity.ToTable("INVOICE");
+
+            entity.Property(e => e.Invoiceid)
+                .ValueGeneratedOnAdd()
+                .HasColumnType("NUMBER")
+                .HasColumnName("INVOICEID");
+            entity.Property(e => e.Createddate)
+                .HasDefaultValueSql("sysdate")
+                .HasColumnType("DATE")
+                .HasColumnName("CREATEDDATE");
+            entity.Property(e => e.Paymentid)
+                .HasColumnType("NUMBER")
+                .HasColumnName("PAYMENTID");
+            entity.Property(e => e.Pdfdata)
+                .HasColumnType("BLOB")
+                .HasColumnName("PDFDATA");
+            entity.Property(e => e.Userid)
+                .HasColumnType("NUMBER")
+                .HasColumnName("USERID");
+
+            entity.HasOne(d => d.Payment).WithMany(p => p.Invoices)
+                .HasForeignKey(d => d.Paymentid)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_PAYMENT_ID");
+
+            entity.HasOne(d => d.User).WithMany(p => p.Invoices)
+                .HasForeignKey(d => d.Userid)
+                .OnDelete(DeleteBehavior.SetNull)
+                .HasConstraintName("FK_INVOICE_USERID");
         });
 
         modelBuilder.Entity<Member>(entity =>

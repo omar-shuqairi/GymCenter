@@ -15,5 +15,7 @@ public partial class Payment
 
     public decimal? Userid { get; set; }
 
+    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+
     public virtual User? User { get; set; }
 }
