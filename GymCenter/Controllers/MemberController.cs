@@ -41,23 +41,6 @@ namespace GymCenter.Controllers
             return View(model);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         public async Task<IActionResult> Services()
         {
 
@@ -73,28 +56,6 @@ namespace GymCenter.Controllers
         {
             return RedirectToAction("Index", "ProceedPayment", new { PlanId = Planid });
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         public async Task<IActionResult> Testimonials()
         {
@@ -163,6 +124,7 @@ namespace GymCenter.Controllers
 
         public async Task<IActionResult> Profile()
         {
+            //return View(member); // Pass the invoices to the view
             int? memberuserid = HttpContext.Session.GetInt32("MemberuserId");
             ViewData["MemberImg"] = HttpContext.Session.GetString("MemberImg");
             var shredimg = await _context.Siteinfos
@@ -184,13 +146,15 @@ namespace GymCenter.Controllers
                                            Passwordd = UserLogin.Passwordd,
                                            ImageFile = User.ImageFile
                                        }).FirstOrDefaultAsync();
-
+            var invoices = await _context.Invoices
+            .Where(i => i.Userid == memberuserid)
+            .ToListAsync();
             if (memberDetails == null)
             {
                 return NotFound();
             }
-
-            return View(memberDetails);
+            var model = Tuple.Create(memberDetails, invoices);
+            return View(model);
         }
         [HttpPost]
         public async Task<IActionResult> Profile([Bind("Userid,Fname,Lname,Email,ImageFile")] User user, string Username, string CurrentPassword, string NewPassword, string ConfirmPassword)
@@ -209,8 +173,7 @@ namespace GymCenter.Controllers
             }
             _context.Update(user);
             await _context.SaveChangesAsync();
-
-            var userlogin = await _context.UserLogins.FindAsync(user.Userid);
+            var userlogin = await _context.UserLogins.SingleOrDefaultAsync(q => q.Userid == user.Userid);
             userlogin.Username = Username;
             userlogin.Passwordd = NewPassword;
             _context.Update(userlogin);
@@ -222,7 +185,12 @@ namespace GymCenter.Controllers
 
         }
 
-
+        public async Task<IActionResult> DownloadInvoice(int invoiceId)
+        {
+            var invoice = await _context.Invoices.FirstOrDefaultAsync(i => i.Invoiceid == invoiceId);
+            if (invoice == null) return NotFound("Invoice not found.");
+            return File(invoice.Pdfdata, "application/pdf", "Invoice.pdf");
+        }
 
 
 

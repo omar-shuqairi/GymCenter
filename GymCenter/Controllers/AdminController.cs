@@ -183,7 +183,7 @@ namespace GymCenter.Controllers
             _context.Update(user);
             await _context.SaveChangesAsync();
 
-            var userlogin = await _context.UserLogins.FindAsync(user.Userid);
+            var userlogin = await _context.UserLogins.SingleOrDefaultAsync(q => q.Userid == user.Userid);
             userlogin.Username = Username;
             userlogin.Passwordd = NewPassword;
             _context.Update(userlogin);
