@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
 using System.Diagnostics;
-
 namespace GymCenter.Controllers
 {
     public class GuestController : Controller
@@ -89,8 +88,6 @@ namespace GymCenter.Controllers
             {
                 _context.Add(contactform);
                 await _context.SaveChangesAsync();
-
-                // Compose an email
                 string subject = "Thank you for contacting us!";
                 string body = $@"
                  <p>Dear {contactform.Guestname},</p>
@@ -100,6 +97,7 @@ namespace GymCenter.Controllers
                  <p>Best regards,</p>
                  <p>Your GymCenter Team</p>";
                 await _emailService.SendEmailAsync(contactform.Guestemail, subject, body);
+                TempData["SubmissionSuccess"] = true;
                 return RedirectToAction(nameof(Contact));
             }
             return View(contactform);
