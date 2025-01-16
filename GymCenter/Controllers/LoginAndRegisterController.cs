@@ -1,6 +1,8 @@
-﻿using GymCenter.Models;
+﻿using GymCenter.Enums;
+using GymCenter.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using Microsoft.EntityFrameworkCore;
 namespace GymCenter.Controllers
 {
     public class LoginAndRegisterController : Controller
@@ -42,13 +44,16 @@ namespace GymCenter.Controllers
                 }
                 _context.Add(user);
                 await _context.SaveChangesAsync();
+
                 UserLogin login = new UserLogin();
                 login.Username = username;
                 login.Passwordd = password;
                 login.Userid = user.Userid;
-                login.Roleid = 3;
+                login.Roleid = (decimal?)EnumRole.Member;
+
                 _context.Add(login);
                 await _context.SaveChangesAsync();
+
                 Member member = new Member();
                 member.Userid = user.Userid;
                 _context.Add(member);
@@ -66,35 +71,33 @@ namespace GymCenter.Controllers
         [HttpPost]
         public IActionResult Login([Bind("Username,Passwordd")] UserLogin userLogin)
         {
-            var auth = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).SingleOrDefault();
+            var auth = _context.UserLogins
+                .Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd)
+                .Include(x => x.User)
+                .SingleOrDefault();
             if (auth != null)
             {
-                var EmailUser = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.Email).SingleOrDefault();
-                var Fname = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.Fname).SingleOrDefault();
-                var Lname = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.Lname).SingleOrDefault();
-                var imgpath = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.ImagePath).SingleOrDefault();
-
-                switch (auth.Roleid)
+                switch ((EnumRole)auth.Roleid)
                 {
-                    case 1://Admin
+                    case EnumRole.Admin:
                         HttpContext.Session.SetInt32("AdminUserId", (int)auth.Userid);
-                        HttpContext.Session.SetString("AdminFullName", Fname + " " + Lname);
-                        HttpContext.Session.SetString("AdminEmail", EmailUser);
-                        HttpContext.Session.SetString("AdminImg", imgpath);
+                        HttpContext.Session.SetString("AdminFullName", auth.User.Fname + " " + auth.User.Lname);
+                        HttpContext.Session.SetString("AdminEmail", auth.User.Email);
+                        HttpContext.Session.SetString("AdminImg", auth.User.ImagePath);
 
                         return RedirectToAction("Home", "Admin");
 
-                    case 2://Trainer
+                    case EnumRole.Trainer:
                         HttpContext.Session.SetInt32("TrainerUserId", (int)auth.Userid);
-                        HttpContext.Session.SetString("TrainerFullName", Fname + " " + Lname);
-                        HttpContext.Session.SetString("TrainerEmail", EmailUser);
-                        HttpContext.Session.SetString("TrainerImg", imgpath);
+                        HttpContext.Session.SetString("TrainerFullName", auth.User.Fname + " " + auth.User.Lname);
+                        HttpContext.Session.SetString("TrainerEmail", auth.User.Email);
+                        HttpContext.Session.SetString("TrainerImg", auth.User.ImagePath);
                         return RedirectToAction("Home", "Trainer");
 
-                    case 3://Member 
+                    case EnumRole.Member:
                         HttpContext.Session.SetInt32("MemberuserId", (int)auth.Userid);
-                        HttpContext.Session.SetString("MemberEmail", EmailUser);
-                        HttpContext.Session.SetString("MemberImg", imgpath);
+                        HttpContext.Session.SetString("MemberEmail", auth.User.Email);
+                        HttpContext.Session.SetString("MemberImg", auth.User.ImagePath);
                         return RedirectToAction("Home", "Member");
                 }
 
