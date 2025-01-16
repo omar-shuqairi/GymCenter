@@ -174,7 +174,6 @@
 })(jQuery);
 
 
-// login loader
 
 const loginForm = document.getElementById('login-form');
 const regloader = document.getElementById('login-loader');
@@ -186,7 +185,5 @@ loginForm.addEventListener('submit', (event) => {
     setTimeout(() => {
         regloader.classList.remove('active');
         loginForm.submit();
-    }, 2000);
+    }, 500);
 });
-
-//end login loader

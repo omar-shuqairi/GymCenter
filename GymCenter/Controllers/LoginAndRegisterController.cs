@@ -53,6 +53,7 @@ namespace GymCenter.Controllers
                 member.Userid = user.Userid;
                 _context.Add(member);
                 await _context.SaveChangesAsync();
+                TempData["Welcome"] = "We are so excited to have you join us!";
                 return RedirectToAction("Login");
             }
             return View(user);
