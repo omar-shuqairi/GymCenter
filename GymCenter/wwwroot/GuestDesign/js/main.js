@@ -57,8 +57,8 @@
     });
 
     /*------------------
-		Navigation
-	--------------------*/
+        Navigation
+    --------------------*/
     $(".mobile-menu").slicknav({
         prependTo: '#mobile-menu-wrap',
         allowParentLinks: true
@@ -180,20 +180,13 @@ const loginForm = document.getElementById('login-form');
 const regloader = document.getElementById('login-loader');
 
 loginForm.addEventListener('submit', (event) => {
-    // Prevent the default form submission
     event.preventDefault();
-
-    // Activate the loader
     regloader.classList.add('active');
 
-    // Simulate a delay (e.g., 3 seconds) to show the loader before submitting the form
     setTimeout(() => {
-        // Hide the loader
         regloader.classList.remove('active');
-
-        // Manually submit the form
         loginForm.submit();
-    }, 3000); // Adjust the delay time as needed
+    }, 2000);
 });
 
 //end login loader

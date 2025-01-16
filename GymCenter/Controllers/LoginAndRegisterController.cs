@@ -66,12 +66,13 @@ namespace GymCenter.Controllers
         public IActionResult Login([Bind("Username,Passwordd")] UserLogin userLogin)
         {
             var auth = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).SingleOrDefault();
-            var EmailUser = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.Email).SingleOrDefault();
-            var Fname = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.Fname).SingleOrDefault();
-            var Lname = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.Lname).SingleOrDefault();
-            var imgpath = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.ImagePath).SingleOrDefault();
             if (auth != null)
             {
+                var EmailUser = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.Email).SingleOrDefault();
+                var Fname = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.Fname).SingleOrDefault();
+                var Lname = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.Lname).SingleOrDefault();
+                var imgpath = _context.UserLogins.Where(x => x.Username == userLogin.Username && x.Passwordd == userLogin.Passwordd).Select(x => x.User.ImagePath).SingleOrDefault();
+
                 switch (auth.Roleid)
                 {
                     case 1://Admin
@@ -97,7 +98,7 @@ namespace GymCenter.Controllers
                 }
 
             }
-
+            TempData["ErrorMessage"] = "Invalid username or password.";
             return View();
         }
     }
