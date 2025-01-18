@@ -1,7 +1,6 @@
 ﻿using GymCenter.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace GymCenter.Controllers
 {
     public class TrainerController : Controller
@@ -24,6 +23,7 @@ namespace GymCenter.Controllers
             var membersWithDetails = await _context.Members
             .Include(m => m.User)
             .Include(m => m.Plan)
+            .AsNoTracking()
             .ToListAsync();
 
             return View(membersWithDetails);
@@ -31,63 +31,94 @@ namespace GymCenter.Controllers
         }
 
 
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            int? AdminId = HttpContext.Session.GetInt32("TrainerUserId");
             ViewData["TrainerFullName"] = HttpContext.Session.GetString("TrainerFullName");
             ViewData["TrainerEmail"] = HttpContext.Session.GetString("TrainerEmail");
             ViewData["TrainerImg"] = HttpContext.Session.GetString("TrainerImg");
-            var trainerDetails = (from User in _context.Users
-                                  join UserLogin in _context.UserLogins
-                                  on User.Userid equals UserLogin.Userid
-                                  where User.Userid == AdminId
-                                  select new JoinTrainerUserTables
-                                  {
-                                      Userid = User.Userid,
-                                      Fname = User.Fname,
-                                      Lname = User.Lname,
-                                      Username = UserLogin.Username,
-                                      Email = User.Email,
-                                      ImagePath = User.ImagePath,
-                                      Passwordd = UserLogin.Passwordd,
-                                      ImageFile = User.ImageFile
-
-                                  }).FirstOrDefault();
-
-            if (trainerDetails == null)
+            var TrainerDetails = await _context.Users
+           .Include(t => t.UserLogins)
+           .Where(t => t.Userid == HttpContext.Session.GetInt32("TrainerUserId"))
+           .AsNoTracking()
+           .FirstOrDefaultAsync();
+            if (TrainerDetails == null)
             {
                 return NotFound();
             }
-            return View(trainerDetails);
+            return View(TrainerDetails);
 
         }
         [HttpPost]
-        public async Task<IActionResult> Profile([Bind("Userid,Fname,Lname,Email,ImageFile")] User user, string Username, string CurrentPassword, string NewPassword, string ConfirmPassword)
+        public async Task<IActionResult> Profile([Bind("Userid,Fname,Lname,Email,ImageFile")] User TrainerNewProfileDetails, string Username, string CurrentPassword, string NewPassword, string ConfirmPassword)
         {
-            if (user.ImageFile != null)
+            var TrainerSavedProfileDetails = await _context.Users
+               .Include(u => u.UserLogins)
+               .SingleOrDefaultAsync(u => u.Userid == TrainerNewProfileDetails.Userid);
+
+            if (TrainerSavedProfileDetails == null)
             {
-                string wwwRootpath = _webHostEnvironment.WebRootPath;
-                string filename = Guid.NewGuid().ToString() + "_" + user.ImageFile.FileName;
-                string path = Path.Combine(wwwRootpath + "/images/", filename);
+                return NotFound("User not found");
+            }
+
+            var MemberSavedUserLogin = TrainerSavedProfileDetails.UserLogins.FirstOrDefault();
+            if (MemberSavedUserLogin == null)
+            {
+                return NotFound("User login details not found");
+            }
+
+            if (!string.IsNullOrEmpty(CurrentPassword) && MemberSavedUserLogin.Passwordd != CurrentPassword)
+            {
+                TempData["ErrorPass"] = "Your password is incorrect!";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            if (TrainerNewProfileDetails.ImageFile != null)
+            {
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                string filename = Guid.NewGuid().ToString() + "_" + TrainerNewProfileDetails.ImageFile.FileName;
+                string path = Path.Combine(wwwRootPath + "/images/", filename);
 
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
-                    await user.ImageFile.CopyToAsync(fileStream);
+                    await TrainerNewProfileDetails.ImageFile.CopyToAsync(fileStream);
                 }
-                user.ImagePath = filename;
+                TrainerSavedProfileDetails.ImagePath = filename;
             }
-            _context.Update(user);
-            await _context.SaveChangesAsync();
-            var userlogin = await _context.UserLogins.SingleOrDefaultAsync(q => q.Userid == user.Userid);
-            userlogin.Username = Username;
-            userlogin.Passwordd = NewPassword;
-            _context.Update(userlogin);
+
+            if (!string.IsNullOrEmpty(NewPassword))
+            {
+                if (NewPassword == ConfirmPassword)
+                {
+                    MemberSavedUserLogin.Passwordd = NewPassword;
+                }
+                else
+                {
+                    TempData["ErrorPassMatch"] = "The new password and confirmation password do not match!";
+                    return RedirectToAction(nameof(Profile));
+                }
+            }
+
+            TrainerSavedProfileDetails.Fname = TrainerNewProfileDetails.Fname;
+            TrainerSavedProfileDetails.Lname = TrainerNewProfileDetails.Lname;
+            TrainerSavedProfileDetails.Email = TrainerNewProfileDetails.Email;
+            MemberSavedUserLogin.Username = Username;
+
+            _context.Update(TrainerSavedProfileDetails);
             await _context.SaveChangesAsync();
 
-            HttpContext.Session.SetString("TrainerFullName", user.Fname + " " + user.Lname);
-            HttpContext.Session.SetString("TrainerEmail", user.Email);
-            HttpContext.Session.SetString("TrainerImg", user.ImagePath);
-
+            if (!string.IsNullOrEmpty(TrainerSavedProfileDetails.ImagePath))
+            {
+                HttpContext.Session.SetString("TrainerImg", TrainerSavedProfileDetails.ImagePath);
+            }
+            if (!string.IsNullOrEmpty(TrainerSavedProfileDetails.Fname) || !string.IsNullOrEmpty(TrainerSavedProfileDetails.Lname))
+            {
+                HttpContext.Session.SetString("TrainerFullName", TrainerSavedProfileDetails.Fname + " " + TrainerSavedProfileDetails.Lname);
+            }
+            if (!string.IsNullOrEmpty(TrainerSavedProfileDetails.Email))
+            {
+                HttpContext.Session.SetString("TrainerEmail", TrainerSavedProfileDetails.Email);
+            }
+            TempData["UpdateProfile"] = "Your profile has been updated successfully!";
             return RedirectToAction(nameof(Profile));
 
         }

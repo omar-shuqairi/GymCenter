@@ -146,8 +146,7 @@ namespace GymCenter.Controllers
 
             if (!string.IsNullOrEmpty(CurrentPassword) && MemberSavedUserLogin.Passwordd != CurrentPassword)
             {
-                ModelState.AddModelError(string.Empty, "Your password is incorrect!");
-                TempData["ErrorPass"] = "The current password is incorrect!";
+                TempData["ErrorPass"] = "Your current password is incorrect!";
                 return RedirectToAction(nameof(Profile));
             }
 
