@@ -1,7 +1,7 @@
 ﻿@{
     Layout = "~/Views/Shared/TrainerLayout.cshtml";
 }
-@model GymCenter.Models.JoinTrainerUserTables
+@model GymCenter.Models.User
 <section class="section-profile">
     <div class="profile-container">
         <h2>View & Update Profile</h2>
@@ -16,14 +16,14 @@
 
                     <!-- Fname Name -->
                     <div class="form-group">
-                        <label for="Fname">fisrt Name</label>
+                        <label for="Fname">First Name</label>
                         <input type="text" id="Fname" name="Fname" value="@Model.Fname" required>
                     </div>
 
                     <!-- Username -->
                     <div class="form-group">
                         <label for="Username">UserName</label>
-                        <input type="text" id="Username" name="Username" value="@Model.Username">
+                        <input type="text" id="Username" name="Username" value="@Model.UserLogins.FirstOrDefault().Username" required>
                     </div>
 
 
@@ -35,7 +35,7 @@
 
                     <div class="form-group">
                         <label for="NewPassword">New Password</label>
-                        <input type="password" id="NewPassword" name="NewPassword" required>
+                        <input type="password" id="NewPassword" name="NewPassword">
                     </div>
 
                 </div>
@@ -57,13 +57,13 @@
 
 
                     <div class="form-group">
-                        <label for="CurrentPassword">Current Password</label>
+                        <label for="CurrentPassword">Your Password</label>
                         <input type="password" id="CurrentPassword" name="CurrentPassword" required>
                     </div>
 
                     <div class="form-group">
                         <label for="ConfirmPassword">Confirm New Password</label>
-                        <input type="password" id="ConfirmPassword" name="ConfirmPassword" required>
+                        <input type="password" id="ConfirmPassword" name="ConfirmPassword" >
                     </div>
 
                 </div>
@@ -77,9 +77,10 @@
 </section>
 
 
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    function previewProfilePic(event) {
+     function previewProfilePic(event) {
         const reader = new FileReader();
         reader.onload = function () {
             const output = document.getElementById('profilePreview');
@@ -87,25 +88,43 @@
         };
         reader.readAsDataURL(event.target.files[0]);
     }
-
-    const profileform = document.getElementById('profile-form');
-    profileform.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        // Save a reference to the form
-        const form = this;
-
-        // Show a SweetAlert message
-        Swal.fire({
-            title: 'Done!',
-            text: 'Your profile has been updated successfully!',
-            icon: 'success',
-            confirmButtonText: 'OK',
-            allowOutsideClick: false,
-            allowEscapeKey: false
-        }).then(() => {
-            // Submit the form programmatically after the alert
-            form.submit();
-        });
-    });
+    @if (TempData["UpdateProfile"] != null)
+    {
+        <text>
+                Swal.fire({
+                title: 'Done!',
+                    text: '@TempData["UpdateProfile"] ',
+                icon: 'success',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+        </text>
+    }
+     @if (TempData["ErrorPass"] != null)
+    {
+        <text>
+            Swal.fire({
+                title: 'Failed',
+                text: '@TempData["ErrorPass"]',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+        </text>
+    }
+    @if (TempData["ErrorPassMatch"] != null)
+    {
+        <text>
+            Swal.fire({
+                title: 'Failed',
+                text: '@TempData["ErrorPassMatch"]',
+                icon: 'error',
+                confirmButtonText: 'OK',
+                allowOutsideClick: false,
+                allowEscapeKey: false
+            });
+        </text>
+    }
 </script>

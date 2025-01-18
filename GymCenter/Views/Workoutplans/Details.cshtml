@@ -4,45 +4,50 @@
     Layout = "~/Views/Shared/TrainerLayout.cshtml";
 }
 
-<h1>Details</h1>
+<div class="container" style="margin-top: 5.5rem;">
+    <h1 class="text-center mb-4">Workout Plan Details</h1>
 
-<div>
-    <h4>Workoutplan</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Planname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Planname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Durationinmonths)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Durationinmonths)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ExerciseRoutines)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ExerciseRoutines)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Goals)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Goals)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Price)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Planid">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div class="card shadow">
+        <div class="card-header">
+            <h4 class="mb-0">Workout Plan Information</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3 font-weight-bold text-secondary">
+                    @Html.DisplayNameFor(model => model.Planname)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Planname)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold text-secondary">
+                    @Html.DisplayNameFor(model => model.Durationinmonths)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Durationinmonths)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold text-secondary">
+                    @Html.DisplayNameFor(model => model.ExerciseRoutines)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.ExerciseRoutines)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold text-secondary">
+                    @Html.DisplayNameFor(model => model.Goals)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Goals)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold text-secondary">
+                    @Html.DisplayNameFor(model => model.Price)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.Price)
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a asp-action="Edit" asp-route-id="@Model?.Planid" class="btn btn-warning">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
 </div>
