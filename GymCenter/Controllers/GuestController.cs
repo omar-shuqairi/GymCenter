@@ -24,61 +24,45 @@ namespace GymCenter.Controllers
 
         public async Task<IActionResult> Home()
         {
-            var homepageList = await _context.Homepages.ToListAsync();
-            return View(homepageList);
-
+            var HomepageContent = await _context.Homepages.AsNoTracking().ToListAsync();
+            return View(HomepageContent);
         }
 
         public async Task<IActionResult> About()
         {
-
-            var aboutus = await _context.Aboutuspages.FirstOrDefaultAsync();
-            var choose = await _context.Whychooseus.ToListAsync();
-            var shredimg = await _context.Siteinfos
-            .Select(s => s.SharedImagePath)
-            .FirstOrDefaultAsync();
-
-            var model = Tuple.Create(aboutus, choose, shredimg);
-
-
+            var AboutUsContnet = await _context.Aboutuspages.AsNoTracking().FirstOrDefaultAsync();
+            var WhyChoosUsContnet = await _context.Whychooseus.AsNoTracking().ToListAsync();
+            var SharedImg = await GetSharedImage();
+            var model = Tuple.Create(AboutUsContnet, WhyChoosUsContnet, SharedImg);
             return View(model);
         }
 
         public async Task<IActionResult> Services()
         {
 
-            var workoutplans = await _context.Workoutplans.ToListAsync();
-            var shredimg = await _context.Siteinfos
-            .Select(s => s.SharedImagePath)
-            .FirstOrDefaultAsync();
-            var model = Tuple.Create(workoutplans, shredimg);
+            var WorkoutPlansContent = await _context.Workoutplans.AsNoTracking().ToListAsync();
+            var SharedImg = await GetSharedImage();
+            var model = Tuple.Create(WorkoutPlansContent, SharedImg);
             return View(model);
         }
 
         public async Task<IActionResult> Testimonials()
         {
-            var testimonials = await _context.Testimonials
+            var TestimonialsContent = await _context.Testimonials
             .Include(t => t.User)
             .Where(t => t.Status == "Approved")
+            .AsNoTracking()
             .ToListAsync();
-            var shredimg = await _context.Siteinfos
-            .Select(s => s.SharedImagePath)
-            .FirstOrDefaultAsync();
-
-            var model = Tuple.Create(testimonials, shredimg);
+            var SharedImg = await GetSharedImage();
+            var model = Tuple.Create(TestimonialsContent, SharedImg);
             return View(model);
         }
 
         public async Task<IActionResult> Contact()
         {
-            var shredimg = await _context.Siteinfos
-            .Select(s => s.SharedImagePath)
-            .FirstOrDefaultAsync();
-
-            var contactinfo = await _context.Contactus.FirstOrDefaultAsync();
-
-            var model = Tuple.Create(contactinfo, shredimg);
-
+            var ContactInfoContent = await _context.Contactus.AsNoTracking().FirstOrDefaultAsync();
+            var SharedImg = await GetSharedImage();
+            var model = Tuple.Create(ContactInfoContent, SharedImg);
             return View(model);
         }
         [HttpPost]
@@ -108,5 +92,10 @@ namespace GymCenter.Controllers
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
+
+        private async Task<string> GetSharedImage() => await _context.Siteinfos
+                .Select(s => s.SharedImagePath)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
     }
 }
