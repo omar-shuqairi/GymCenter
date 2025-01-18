@@ -25,7 +25,6 @@ namespace GymCenter.Controllers
             .Include(m => m.Plan)
             .AsNoTracking()
             .ToListAsync();
-
             return View(membersWithDetails);
 
         }
