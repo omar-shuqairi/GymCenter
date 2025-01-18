@@ -21,36 +21,30 @@ namespace GymCenter.Controllers
         }
         public async Task<IActionResult> Home()
         {
-            var homepageList = await _context.Homepages.ToListAsync();
-            return View(homepageList);
+
+            var HomepageContent = await _context.Homepages.AsNoTracking().ToListAsync();
+            return View(HomepageContent);
 
         }
 
         public async Task<IActionResult> About()
         {
 
-            var aboutus = await _context.Aboutuspages.FirstOrDefaultAsync();
-            var choose = await _context.Whychooseus.ToListAsync();
-            var shredimg = await _context.Siteinfos
-            .Select(s => s.SharedImagePath)
-            .FirstOrDefaultAsync();
-
-            var model = Tuple.Create(aboutus, choose, shredimg);
-
-
+            var AboutUsContnet = await _context.Aboutuspages.AsNoTracking().FirstOrDefaultAsync();
+            var WhyChoosUsContnet = await _context.Whychooseus.AsNoTracking().ToListAsync();
+            var SharedImg = await GetSharedImage();
+            var model = Tuple.Create(AboutUsContnet, WhyChoosUsContnet, SharedImg);
             return View(model);
         }
 
         public async Task<IActionResult> Services()
         {
-
-            var workoutplans = await _context.Workoutplans.ToListAsync();
-            var shredimg = await _context.Siteinfos
-            .Select(s => s.SharedImagePath)
-            .FirstOrDefaultAsync();
-            ViewBag.SharedImage = shredimg;
-            return View(workoutplans);
+            var WorkoutPlansContent = await _context.Workoutplans.AsNoTracking().ToListAsync();
+            var SharedImg = await GetSharedImage();
+            var model = Tuple.Create(WorkoutPlansContent, SharedImg);
+            return View(model);
         }
+
         [HttpPost]
         public IActionResult Services(int Planid)
         {
@@ -59,44 +53,37 @@ namespace GymCenter.Controllers
 
         public async Task<IActionResult> Testimonials()
         {
-            var testimonials = await _context.Testimonials
+            var TestimonialsContent = await _context.Testimonials
             .Include(t => t.User)
             .Where(t => t.Status == "Approved")
+            .AsNoTracking()
             .ToListAsync();
-            var shredimg = await _context.Siteinfos
-            .Select(s => s.SharedImagePath)
-            .FirstOrDefaultAsync();
-
-            var model = Tuple.Create(testimonials, shredimg);
+            var SharedImg = await GetSharedImage();
+            var model = Tuple.Create(TestimonialsContent, SharedImg);
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Testimonials(string content)
+        public async Task<IActionResult> Testimonials(string NewTestimonialContent)
         {
             if (ModelState.IsValid)
             {
-                int? memberuserid = HttpContext.Session.GetInt32("MemberuserId");
-                var testimonial = new Testimonial();
-                testimonial.Userid = memberuserid;
-                testimonial.Content = content;
-                testimonial.Status = "Pending";
-                _context.Add(testimonial);
+                var NewTestimonial = new Testimonial();
+                NewTestimonial.Userid = HttpContext.Session.GetInt32("MemberuserId");
+                NewTestimonial.Content = NewTestimonialContent;
+                NewTestimonial.Status = "Pending";
+                _context.Add(NewTestimonial);
                 await _context.SaveChangesAsync();
+                TempData["SubmitTestimonial"] = "Thank you for submitting your testimonial!";
                 return RedirectToAction(nameof(Testimonials));
             }
-            return View(content);
+            return View(NewTestimonialContent);
         }
 
         public async Task<IActionResult> Contact()
         {
-            var shredimg = await _context.Siteinfos
-            .Select(s => s.SharedImagePath)
-            .FirstOrDefaultAsync();
-
-            var contactinfo = await _context.Contactus.FirstOrDefaultAsync();
-
-            var model = Tuple.Create(contactinfo, shredimg);
-
+            var ContactInfoContent = await _context.Contactus.AsNoTracking().FirstOrDefaultAsync();
+            var SharedImg = await GetSharedImage();
+            var model = Tuple.Create(ContactInfoContent, SharedImg);
             return View(model);
         }
         [HttpPost]
@@ -107,7 +94,6 @@ namespace GymCenter.Controllers
                 _context.Add(contactform);
                 await _context.SaveChangesAsync();
 
-                // Compose an email
                 string subject = "Thank you for contacting us!";
                 string body = $@"
                  <p>Dear {contactform.Guestname},</p>
@@ -124,65 +110,106 @@ namespace GymCenter.Controllers
 
         public async Task<IActionResult> Profile()
         {
-            //return View(member); // Pass the invoices to the view
-            int? memberuserid = HttpContext.Session.GetInt32("MemberuserId");
             ViewData["MemberImg"] = HttpContext.Session.GetString("MemberImg");
-            var shredimg = await _context.Siteinfos
-           .Select(s => s.SharedImagePath)
-           .FirstOrDefaultAsync();
-            ViewBag.SharedImage = shredimg;
-            var memberDetails = await (from User in _context.Users
-                                       join UserLogin in _context.UserLogins
-                                       on User.Userid equals UserLogin.Userid
-                                       where User.Userid == memberuserid
-                                       select new JoinMemberUserTables
-                                       {
-                                           Userid = User.Userid,
-                                           Fname = User.Fname,
-                                           Lname = User.Lname,
-                                           Username = UserLogin.Username,
-                                           Email = User.Email,
-                                           ImagePath = User.ImagePath,
-                                           Passwordd = UserLogin.Passwordd,
-                                           ImageFile = User.ImageFile
-                                       }).FirstOrDefaultAsync();
-            var invoices = await _context.Invoices
-            .Where(i => i.Userid == memberuserid)
-            .ToListAsync();
-            if (memberDetails == null)
+            var SharedImg = await GetSharedImage();
+            var MmemberDetails = await _context.Users
+            .Include(m => m.UserLogins)
+            .Include(m => m.Invoices)
+            .Where(m => m.Userid == HttpContext.Session.GetInt32("MemberuserId"))
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+
+            if (MmemberDetails == null)
             {
                 return NotFound();
             }
-            var model = Tuple.Create(memberDetails, invoices);
+            var model = Tuple.Create(MmemberDetails, SharedImg);
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> Profile([Bind("Userid,Fname,Lname,Email,ImageFile")] User user, string Username, string CurrentPassword, string NewPassword, string ConfirmPassword)
+        public async Task<IActionResult> Profile([Bind("Userid,Fname,Lname,Email,ImageFile")] User MemberNewProfileDetails, string Username, string CurrentPassword, string NewPassword, string ConfirmPassword)
         {
-            if (user.ImageFile != null)
+            var MemberSavedProfileDetails = await _context.Users
+                .Include(u => u.UserLogins)
+                .SingleOrDefaultAsync(u => u.Userid == MemberNewProfileDetails.Userid);
+
+            if (MemberSavedProfileDetails == null)
             {
-                string wwwRootpath = _webHostEnvironment.WebRootPath;
-                string filename = Guid.NewGuid().ToString() + "_" + user.ImageFile.FileName;
-                string path = Path.Combine(wwwRootpath + "/images/", filename);
+                return NotFound("User not found");
+            }
+
+            var MemberSavedUserLogin = MemberSavedProfileDetails.UserLogins.FirstOrDefault();
+            if (MemberSavedUserLogin == null)
+            {
+                return NotFound("User login details not found");
+            }
+
+            if (!string.IsNullOrEmpty(CurrentPassword) && MemberSavedUserLogin.Passwordd != CurrentPassword)
+            {
+                ModelState.AddModelError(string.Empty, "Your password is incorrect!");
+                TempData["ErrorPass"] = "The current password is incorrect!";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            if (MemberNewProfileDetails.ImageFile != null)
+            {
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                string filename = Guid.NewGuid().ToString() + "_" + MemberNewProfileDetails.ImageFile.FileName;
+                string path = Path.Combine(wwwRootPath + "/images/", filename);
 
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
-                    await user.ImageFile.CopyToAsync(fileStream);
+                    await MemberNewProfileDetails.ImageFile.CopyToAsync(fileStream);
                 }
-                user.ImagePath = filename;
+                MemberSavedProfileDetails.ImagePath = filename;
             }
-            _context.Update(user);
-            await _context.SaveChangesAsync();
-            var userlogin = await _context.UserLogins.SingleOrDefaultAsync(q => q.Userid == user.Userid);
-            userlogin.Username = Username;
-            userlogin.Passwordd = NewPassword;
-            _context.Update(userlogin);
+
+            if (!string.IsNullOrEmpty(NewPassword))
+            {
+                if (NewPassword == ConfirmPassword)
+                {
+                    MemberSavedUserLogin.Passwordd = NewPassword;
+                }
+                else
+                {
+                    TempData["ErrorPassMatch"] = "The new password and confirmation password do not match!";
+                    return RedirectToAction(nameof(Profile));
+                }
+            }
+
+            MemberSavedProfileDetails.Fname = MemberNewProfileDetails.Fname;
+            MemberSavedProfileDetails.Lname = MemberNewProfileDetails.Lname;
+            MemberSavedProfileDetails.Email = MemberNewProfileDetails.Email;
+            MemberSavedUserLogin.Username = Username;
+
+            _context.Update(MemberSavedProfileDetails);
             await _context.SaveChangesAsync();
 
-            HttpContext.Session.SetString("MemberImg", user.ImagePath);
+            if (!string.IsNullOrEmpty(MemberSavedProfileDetails.ImagePath))
+            {
+                HttpContext.Session.SetString("MemberImg", MemberSavedProfileDetails.ImagePath);
+            }
 
+            TempData["UpdateProfile"] = "Your profile has been updated successfully!";
             return RedirectToAction(nameof(Profile));
+        }
+        public async Task<IActionResult> MyPlan()
+        {
+            int? memberuserid = HttpContext.Session.GetInt32("MemberuserId");
+            var SharedImg = await GetSharedImage();
+            var member = await _context.Members
+            .Include(m => m.Plan)
+            .Where(m => m.Userid == memberuserid)
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+            var model = Tuple.Create(member, SharedImg);
+            return View(model);
+        }
 
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Clear();
+            return RedirectToAction("Home", "Guest");
         }
 
         public async Task<IActionResult> DownloadInvoice(int invoiceId)
@@ -192,56 +219,9 @@ namespace GymCenter.Controllers
             return File(invoice.Pdfdata, "application/pdf", "Invoice.pdf");
         }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public async Task<IActionResult> MyPlan()
-        {
-            int? memberuserid = HttpContext.Session.GetInt32("MemberuserId");
-            var shredimg = await _context.Siteinfos
-            .Select(s => s.SharedImagePath)
-            .FirstOrDefaultAsync();
-            ViewBag.SharedImage = shredimg;
-            var member = await _context.Members
-            .Include(m => m.Plan)
-            .Where(m => m.Userid == memberuserid)
-            .FirstOrDefaultAsync();
-
-            return View(member);
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        public IActionResult Logout()
-        {
-            HttpContext.Session.Clear();
-            return RedirectToAction("Home", "Guest");
-        }
+        private async Task<string> GetSharedImage() => await _context.Siteinfos
+                .Select(s => s.SharedImagePath)
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
     }
 }

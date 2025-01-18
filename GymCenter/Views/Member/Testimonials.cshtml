@@ -55,14 +55,14 @@
         </div>
     </div>
 </section>
-<!-- form for sumbit testimonial  -->
+<!-- Start form for submit testimonial  -->
 <section class="testimonial-submission-section">
     <div class="container">
         <h2>Submit Your Testimonial</h2>
         <form method="POST" id="testimonial-form">
             <div class="form-group">
                 <label for="content">Your Testimonial</label>
-                <textarea id="content" name="content" placeholder="Write your testimonial here..." rows="4" required></textarea>
+                <textarea id="content" name="NewTestimonialContent" placeholder="Write your testimonial here..." rows="4" required></textarea>
             </div>
             <div class="form-group">
                 <button type="submit" class="submit-btn">Submit</button>
@@ -71,31 +71,19 @@
     </div>
 </section>
 
-
-
-
-<!--end form for sumbit testimonial  -->
-<!-- Include SweetAlert Library -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-    const testimonialForm = document.getElementById('testimonial-form');
-    testimonialForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-
-        // Save a reference to the form
-        const form = this;
-
-        // Show a SweetAlert message
+    @if (TempData["SubmitTestimonial"] != null)
+    {
+        <text>
         Swal.fire({
             title: 'Submitted!',
-            text: 'Thank you for submitting your testimonial! It will be reviewed by the admin.',
+            text: '@TempData["SubmitTestimonial"]',
             icon: 'success',
             confirmButtonText: 'OK',
             allowOutsideClick: false,
             allowEscapeKey: false
-        }).then(() => {
-            // Submit the form programmatically after the alert
-            form.submit();
         });
-    });
+        </text>
+    }
 </script>

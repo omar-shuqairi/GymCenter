@@ -2,10 +2,10 @@
     Layout = "~/Views/Shared/MemberLayout.cshtml";
 
 }
-@model IEnumerable<GymCenter.Models.Workoutplan>
+@model Tuple<List<GymCenter.Models.Workoutplan>,string>
 
 <!-- Breadcrumb Section Begin -->
-<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/images/" + ViewBag.SharedImage)">
+<section class="breadcrumb-section set-bg" data-setbg="@Url.Content("~/images/" + Model.Item2)">
     <div class="container">
         <div class="row">
             <div class="col-lg-12 text-center">
@@ -32,7 +32,7 @@
             </div>
         </div>
         <div class="row justify-content-center">
-            @foreach (var item in Model)
+            @foreach (var item in Model.Item1)
             {
                 <div class="col-lg-4 col-md-8">
                   <form method="post">

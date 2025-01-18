@@ -96,6 +96,7 @@ namespace GymCenter.Controllers
 
                     case EnumRole.Member:
                         HttpContext.Session.SetInt32("MemberuserId", (int)auth.Userid);
+                        HttpContext.Session.SetString("MemberFullName", auth.User.Fname + " " + auth.User.Lname);
                         HttpContext.Session.SetString("MemberEmail", auth.User.Email);
                         HttpContext.Session.SetString("MemberImg", auth.User.ImagePath);
                         return RedirectToAction("Home", "Member");
