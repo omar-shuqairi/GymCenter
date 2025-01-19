@@ -59,13 +59,13 @@ namespace GymCenter.Controllers
                 return NotFound("User not found");
             }
 
-            var MemberSavedUserLogin = TrainerSavedProfileDetails.UserLogins.FirstOrDefault();
-            if (MemberSavedUserLogin == null)
+            var TrainerSavedUserLogin = TrainerSavedProfileDetails.UserLogins.FirstOrDefault();
+            if (TrainerSavedUserLogin == null)
             {
                 return NotFound("User login details not found");
             }
 
-            if (!string.IsNullOrEmpty(CurrentPassword) && MemberSavedUserLogin.Passwordd != CurrentPassword)
+            if (!string.IsNullOrEmpty(CurrentPassword) && TrainerSavedUserLogin.Passwordd != CurrentPassword)
             {
                 TempData["ErrorPass"] = "Your password is incorrect!";
                 return RedirectToAction(nameof(Profile));
@@ -88,7 +88,7 @@ namespace GymCenter.Controllers
             {
                 if (NewPassword == ConfirmPassword)
                 {
-                    MemberSavedUserLogin.Passwordd = NewPassword;
+                    TrainerSavedUserLogin.Passwordd = NewPassword;
                 }
                 else
                 {
@@ -100,7 +100,7 @@ namespace GymCenter.Controllers
             TrainerSavedProfileDetails.Fname = TrainerNewProfileDetails.Fname;
             TrainerSavedProfileDetails.Lname = TrainerNewProfileDetails.Lname;
             TrainerSavedProfileDetails.Email = TrainerNewProfileDetails.Email;
-            MemberSavedUserLogin.Username = Username;
+            TrainerSavedUserLogin.Username = Username;
 
             _context.Update(TrainerSavedProfileDetails);
             await _context.SaveChangesAsync();

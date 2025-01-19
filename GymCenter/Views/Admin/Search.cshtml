@@ -2,11 +2,9 @@
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 
 }
-
-@model IEnumerable<JoinMemberUserTables>
+@model IEnumerable<Member>
 <link href="https://cdn.datatables.net/1.11.1/css/jquery.dataTables.min.css" rel="stylesheet" />
 <link href="https://cdn.datatables.net/buttons/2.0.0/css/buttons.dataTables.min.css" rel="stylesheet" />
-
 
 <div class="container-xxl">
 <form asp-action="Search" class="p-4 shadow-lg rounded bg-light" style="margin-top: 100px;">
@@ -38,10 +36,10 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>@item.Fname</td>
-                <td>@item.Lname</td>
-                <td>@item.SubscriptionStart</td>
-                <td>@item.SubscriptionEnd</td>
+                <td>@item.User.Fname</td>
+                <td>@item.User.Lname</td>
+                <td>@item.SubscriptionStart.Value.ToShortDateString()</td>
+                    <td>@item.SubscriptionEnd.Value.ToShortDateString()</td>
             </tr>
         }
     </tbody>

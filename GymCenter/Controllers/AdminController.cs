@@ -15,7 +15,7 @@ namespace GymCenter.Controllers
         }
         public async Task<IActionResult> Home()
         {
-            ViewData["AdmimUserId"] = HttpContext.Session.GetInt32("AdminUserId");
+
             ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
             ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
             ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
@@ -26,7 +26,6 @@ namespace GymCenter.Controllers
             var monthlyReport = await GetMonthlyReport();
             var annualReport = await GetAnnualReport();
 
-            // Pass reports to the view
             var model = new SubscriptionReportsViewModel
             {
                 MonthlyReport = monthlyReport,
@@ -38,7 +37,7 @@ namespace GymCenter.Controllers
         private async Task<List<SubscriptionReport>> GetMonthlyReport()
         {
             return await _context.Members
-                .Where(m => m.SubscriptionStart != null)  // Ensure SubscriptionStart is not null
+                .Where(m => m.SubscriptionStart != null)
                 .GroupBy(m => new { m.SubscriptionStart.Value.Month, m.SubscriptionStart.Value.Year })
                 .Select(g => new SubscriptionReport
                 {
@@ -52,7 +51,7 @@ namespace GymCenter.Controllers
         private async Task<List<SubscriptionReport>> GetAnnualReport()
         {
             return await _context.Members
-                .Where(m => m.SubscriptionStart != null)  // Ensure SubscriptionStart is not null
+                .Where(m => m.SubscriptionStart != null)
                 .GroupBy(m => m.SubscriptionStart.Value.Year)
                 .Select(g => new SubscriptionReport
                 {
@@ -64,53 +63,38 @@ namespace GymCenter.Controllers
         }
 
 
-        public IActionResult Search()
+        public async Task<IActionResult> Search()
         {
+
             ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
             ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
-
-            var memberDetails = from member in _context.Members
-                                join user in _context.Users on member.Userid equals user.Userid
-                                select new JoinMemberUserTables
-                                {
-                                    Fname = user.Fname,
-                                    Lname = user.Lname,
-                                    SubscriptionStart = member.SubscriptionStart,
-                                    SubscriptionEnd = member.SubscriptionEnd
-                                };
-
-            var result = memberDetails.ToList();
-
+            var result = await _context.Members
+            .Include(r => r.User)
+            .Where(r => r.SubscriptionStart != null && r.SubscriptionEnd != null)
+            .AsNoTracking()
+            .ToListAsync();
             return View(result);
 
         }
-        [HttpPost]
-        public IActionResult Search(DateTime? startDate, DateTime? endDate)
-        {
-            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
-            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
-            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
-            var memberDetails = from member in _context.Members
-                                join user in _context.Users on member.Userid equals user.Userid
-                                select new JoinMemberUserTables
-                                {
-                                    Fname = user.Fname,
-                                    Lname = user.Lname,
-                                    SubscriptionStart = member.SubscriptionStart,
-                                    SubscriptionEnd = member.SubscriptionEnd
-                                };
 
-            var result = memberDetails.ToList();
+        [HttpPost]
+        public async Task<IActionResult> Search(DateTime? startDate, DateTime? endDate)
+        {
+
+            var result = await _context.Members
+                .Include(r => r.User)
+                .Where(r => r.SubscriptionStart != null && r.SubscriptionEnd != null)
+                .ToListAsync();
             if (startDate == null && endDate == null)
             {
-                ViewBag.TotalSubscriptions = result.Where(m => m.SubscriptionStart != null && m.SubscriptionEnd != null).Count();
+                ViewBag.TotalSubscriptions = result.Count();
                 return View(result);
             }
             else if (startDate != null && endDate == null)
             {
                 result = result.Where(x => x.SubscriptionStart.HasValue && x.SubscriptionStart.Value.Date >= startDate).ToList();
-                ViewBag.TotalSubscriptions = result.Where(m => m.SubscriptionStart != null && m.SubscriptionEnd != null).Count();
+                ViewBag.TotalSubscriptions = result.Count();
                 return View(result);
             }
             else if (startDate == null && endDate != null)
@@ -118,87 +102,112 @@ namespace GymCenter.Controllers
 
 
                 result = result.Where(x => x.SubscriptionStart.HasValue && x.SubscriptionStart.Value.Date <= endDate).ToList();
-                ViewBag.TotalSubscriptions = result.Where(m => m.SubscriptionStart != null && m.SubscriptionEnd != null).Count();
+                ViewBag.TotalSubscriptions = result.Count();
                 return View(result);
             }
-
             else
             {
                 result = result.Where(x => x.SubscriptionStart.HasValue && x.SubscriptionStart.Value.Date >= startDate && x.SubscriptionEnd.HasValue && x.SubscriptionEnd.Value.Date <= endDate).ToList();
-                ViewBag.TotalSubscriptions = result.Where(m => m.SubscriptionStart != null && m.SubscriptionEnd != null).Count();
+                ViewBag.TotalSubscriptions = result.Count();
 
             }
             return View(result);
 
         }
 
-        public IActionResult Profile()
+        public async Task<IActionResult> Profile()
         {
-            ViewData["AdmimUserId"] = HttpContext.Session.GetInt32("AdminUserId");
-            int? AdminId = HttpContext.Session.GetInt32("AdminUserId");
+
             ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
             ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
             ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
 
-
-            var adminDetails = (from User in _context.Users
-                                join UserLogin in _context.UserLogins
-                                on User.Userid equals UserLogin.Userid
-                                where User.Userid == AdminId
-                                select new JoinAdminUserTables
-                                {
-                                    Userid = User.Userid,
-                                    Fname = User.Fname,
-                                    Lname = User.Lname,
-                                    Username = UserLogin.Username,
-                                    Email = User.Email,
-                                    ImagePath = User.ImagePath,
-                                    Passwordd = UserLogin.Passwordd,
-                                    ImageFile = User.ImageFile
-
-                                }).FirstOrDefault();
-
-            if (adminDetails == null)
+            var AdminDetails = await _context.Users
+            .Include(t => t.UserLogins)
+            .Where(t => t.Userid == HttpContext.Session.GetInt32("AdminUserId"))
+            .AsNoTracking()
+            .FirstOrDefaultAsync();
+            if (AdminDetails == null)
             {
                 return NotFound();
             }
-            return View(adminDetails);
-
+            return View(AdminDetails);
         }
+
         [HttpPost]
-        public async Task<IActionResult> Profile([Bind("Userid,Fname,Lname,Email,ImageFile")] User user, string Username, string CurrentPassword, string NewPassword, string ConfirmPassword)
+        public async Task<IActionResult> Profile([Bind("Userid,Fname,Lname,Email,ImageFile")] User AdminNewProfileDetails, string Username, string CurrentPassword, string NewPassword, string ConfirmPassword)
         {
-            if (user.ImageFile != null)
+            var AdminSavedProfileDetails = await _context.Users
+               .Include(u => u.UserLogins)
+               .SingleOrDefaultAsync(u => u.Userid == AdminNewProfileDetails.Userid);
+
+            if (AdminSavedProfileDetails == null)
             {
-                string wwwRootpath = _webHostEnvironment.WebRootPath;
-                string filename = Guid.NewGuid().ToString() + "_" + user.ImageFile.FileName;
-                string path = Path.Combine(wwwRootpath + "/images/", filename);
+                return NotFound("User not found");
+            }
+
+            var AdminSavedUserLogin = AdminSavedProfileDetails.UserLogins.FirstOrDefault();
+            if (AdminSavedUserLogin == null)
+            {
+                return NotFound("User login details not found");
+            }
+
+            if (!string.IsNullOrEmpty(CurrentPassword) && AdminSavedUserLogin.Passwordd != CurrentPassword)
+            {
+                TempData["ErrorPass"] = "Your password is incorrect!";
+                return RedirectToAction(nameof(Profile));
+            }
+
+            if (AdminNewProfileDetails.ImageFile != null)
+            {
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                string filename = Guid.NewGuid().ToString() + "_" + AdminNewProfileDetails.ImageFile.FileName;
+                string path = Path.Combine(wwwRootPath + "/images/", filename);
 
                 using (var fileStream = new FileStream(path, FileMode.Create))
                 {
-                    await user.ImageFile.CopyToAsync(fileStream);
+                    await AdminNewProfileDetails.ImageFile.CopyToAsync(fileStream);
                 }
-                user.ImagePath = filename;
+                AdminSavedProfileDetails.ImagePath = filename;
             }
-            _context.Update(user);
+
+            if (!string.IsNullOrEmpty(NewPassword))
+            {
+                if (NewPassword == ConfirmPassword)
+                {
+                    AdminSavedUserLogin.Passwordd = NewPassword;
+                }
+                else
+                {
+                    TempData["ErrorPassMatch"] = "The new password and confirmation password do not match!";
+                    return RedirectToAction(nameof(Profile));
+                }
+            }
+
+            AdminSavedProfileDetails.Fname = AdminNewProfileDetails.Fname;
+            AdminSavedProfileDetails.Lname = AdminNewProfileDetails.Lname;
+            AdminSavedProfileDetails.Email = AdminNewProfileDetails.Email;
+            AdminSavedUserLogin.Username = Username;
+
+            _context.Update(AdminSavedProfileDetails);
             await _context.SaveChangesAsync();
 
-            var userlogin = await _context.UserLogins.SingleOrDefaultAsync(q => q.Userid == user.Userid);
-            userlogin.Username = Username;
-            userlogin.Passwordd = NewPassword;
-            _context.Update(userlogin);
-            await _context.SaveChangesAsync();
-
-            HttpContext.Session.SetString("AdminFullName", user.Fname + " " + user.Lname);
-            HttpContext.Session.SetString("AdminEmail", user.Email);
-            HttpContext.Session.SetString("AdminImg", user.ImagePath);
-
+            if (!string.IsNullOrEmpty(AdminSavedProfileDetails.ImagePath))
+            {
+                HttpContext.Session.SetString("AdminImg", AdminSavedProfileDetails.ImagePath);
+            }
+            if (!string.IsNullOrEmpty(AdminSavedProfileDetails.Fname) || !string.IsNullOrEmpty(AdminSavedProfileDetails.Lname))
+            {
+                HttpContext.Session.SetString("AdminFullName", AdminSavedProfileDetails.Fname + " " + AdminSavedProfileDetails.Lname);
+            }
+            if (!string.IsNullOrEmpty(AdminSavedProfileDetails.Email))
+            {
+                HttpContext.Session.SetString("AdminEmail", AdminSavedProfileDetails.Email);
+            }
+            TempData["UpdateProfile"] = "Your profile has been updated successfully!";
             return RedirectToAction(nameof(Profile));
 
         }
-
-
-
 
         public async Task<IActionResult> ApprovedTestimonials()
         {
