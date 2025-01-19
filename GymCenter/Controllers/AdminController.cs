@@ -209,31 +209,33 @@ namespace GymCenter.Controllers
 
         }
 
+
         public async Task<IActionResult> ApprovedTestimonials()
         {
             ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
             ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
             ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
-            var modelContext = _context.Testimonials
+            var ApprovedTestimonials = await _context.Testimonials
                           .Where(t => t.Status == "Approved")
-                          .Include(t => t.User);
+                          .Include(t => t.User)
+                          .AsNoTracking()
+                          .ToListAsync();
 
-            return View(await modelContext.ToListAsync());
+            return View(ApprovedTestimonials);
         }
 
-        // POST: Approve Testimonial
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ApprovedTestimonials(decimal? id)
         {
-            var testimonial = await _context.Testimonials.FindAsync(id);
-            if (testimonial != null)
+            var Testimonial = await _context.Testimonials.FindAsync(id);
+            if (Testimonial != null)
             {
-                testimonial.Status = "Approved"; // Set status to approved
-                _context.Update(testimonial);
+                Testimonial.Status = "Approved";
+                _context.Update(Testimonial);
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction(nameof(PendingTestimonials)); // Redirect back to the pending testimonials page
+            return RedirectToAction(nameof(PendingTestimonials));
         }
 
         public async Task<IActionResult> RejectedTestimonials()
@@ -242,27 +244,26 @@ namespace GymCenter.Controllers
             ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
             ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
 
-            var modelContext = _context.Testimonials
+            var RejectedTestimonials = await _context.Testimonials
                           .Where(t => t.Status == "Rejected")
-                          .Include(t => t.User);
-
-            return View(await modelContext.ToListAsync());
+                          .Include(t => t.User)
+                          .AsNoTracking()
+                          .ToListAsync();
+            return View(RejectedTestimonials);
 
         }
-
-        // POST: Reject Testimonial
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RejectedTestimonials(decimal? id)
         {
-            var testimonial = await _context.Testimonials.FindAsync(id);
-            if (testimonial != null)
+            var Testimonial = await _context.Testimonials.FindAsync(id);
+            if (Testimonial != null)
             {
-                testimonial.Status = "Rejected"; // Set status to rejected
-                _context.Update(testimonial);
+                Testimonial.Status = "Rejected";
+                _context.Update(Testimonial);
                 await _context.SaveChangesAsync();
             }
-            return RedirectToAction(nameof(PendingTestimonials)); // Redirect back to the pending testimonials page
+            return RedirectToAction(nameof(PendingTestimonials));
         }
 
         public async Task<IActionResult> PendingTestimonials()
@@ -270,11 +271,13 @@ namespace GymCenter.Controllers
             ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
             ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
             ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
-            var modelContext = _context.Testimonials
+            var PendingTestimonials = await _context.Testimonials
                           .Where(t => t.Status == "Pending")
-                          .Include(t => t.User);
+                          .Include(t => t.User)
+                          .AsNoTracking()
+                          .ToListAsync();
 
-            return View(await modelContext.ToListAsync());
+            return View(PendingTestimonials);
         }
 
         public IActionResult Logout()
