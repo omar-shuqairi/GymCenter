@@ -25,43 +25,43 @@ namespace GymCenter.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignUp([Bind("Userid,Fname,Lname,Email,ImagePath,ImageFile")] User user, string username, string password)
+        public async Task<IActionResult> SignUp([Bind("Userid,Fname,Lname,Email,ImagePath,ImageFile")] User NewMember, string username, string password)
         {
             if (ModelState.IsValid)
             {
-                if (user.ImageFile != null)
+                if (NewMember.ImageFile != null)
                 {
                     string wwwRootpath = _webHostEnvironment.WebRootPath;
-                    string filename = Guid.NewGuid().ToString() + "_" + user.ImageFile.FileName;
+                    string filename = Guid.NewGuid().ToString() + "_" + NewMember.ImageFile.FileName;
                     string path = Path.Combine(wwwRootpath + "/images/", filename);
 
                     using (var fileStream = new FileStream(path, FileMode.Create))
                     {
-                        await user.ImageFile.CopyToAsync(fileStream);
+                        await NewMember.ImageFile.CopyToAsync(fileStream);
                     }
-                    user.ImagePath = filename;
+                    NewMember.ImagePath = filename;
 
                 }
-                _context.Add(user);
+                _context.Add(NewMember);
                 await _context.SaveChangesAsync();
 
                 UserLogin login = new UserLogin();
                 login.Username = username;
                 login.Passwordd = password;
-                login.Userid = user.Userid;
+                login.Userid = NewMember.Userid;
                 login.Roleid = (decimal?)EnumRole.Member;
 
                 _context.Add(login);
                 await _context.SaveChangesAsync();
 
                 Member member = new Member();
-                member.Userid = user.Userid;
+                member.Userid = NewMember.Userid;
                 _context.Add(member);
                 await _context.SaveChangesAsync();
                 TempData["Welcome"] = "We are so excited to have you join us!";
                 return RedirectToAction("Login");
             }
-            return View(user);
+            return View(NewMember);
         }
         public IActionResult Login()
         {

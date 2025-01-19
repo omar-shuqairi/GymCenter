@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using GymCenter.Models;
+using GymCenter.Enums;
+using SQLitePCL;
 
 namespace GymCenter.Controllers
 {
@@ -26,50 +28,38 @@ namespace GymCenter.Controllers
             ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
             ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
             ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+            var MemberDetails = await _context.Members
+            .Include(m => m.User)
+            .ThenInclude(u => u.UserLogins)
+            .Include(m => m.Plan)
+            .ToListAsync();
+            return View(MemberDetails);
 
-            var members = from member in _context.Members
-                          join user in _context.Users on member.Userid equals user.Userid
-                          join UserLogin in _context.UserLogins on user.Userid equals UserLogin.Userid
-                          //join Workoutplan in _context.Workoutplans on member.Planid equals Workoutplan.Planid
-                          where UserLogin.Roleid == 3
-                          select new JoinMemberUserTables
-                          {
-                              Fname = user.Fname,
-                              Lname = user.Lname,
-                              SubscriptionStart = member.SubscriptionStart,
-                              SubscriptionEnd = member.SubscriptionEnd,
-                              Email = user.Email,
-                              ImagePath = user.ImagePath,
-                              Planid = member.Planid,
-                              Username = UserLogin.Username,
-                              Passwordd = UserLogin.Passwordd,
-                              Userid = user.Userid
-
-
-                          };
-
-            var result = members.ToList();
-
-            return View(result);
         }
 
         // GET: Users/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Users == null)
             {
                 return NotFound();
             }
+            var MemberDetails = await _context.Members
+            .Include(m => m.User)
+            .ThenInclude(u => u.UserLogins)
+            .Include(m => m.Plan)
+            .SingleOrDefaultAsync(m => m.Userid == id);
 
-            var user = await _context.Users
-                .FirstOrDefaultAsync(m => m.Userid == id);
-            if (user == null)
+            if (MemberDetails == null)
             {
                 return NotFound();
             }
-
-            return View(user);
+            return View(MemberDetails);
         }
+
 
         // GET: Users/Create
         public IActionResult Create()
@@ -81,60 +71,51 @@ namespace GymCenter.Controllers
         }
 
         // POST: Users/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Userid,Fname,Lname,Username,Passwordd,Email,ImageFile")] JoinAdminUserTables newuser)
+        public async Task<IActionResult> Create([Bind("Userid,Fname,Lname,Email,ImagePath,ImageFile")] User NewMember, string Username, string Passwordd)
         {
             if (ModelState.IsValid)
             {
-
-                if (newuser.ImageFile != null)
+                if (NewMember.ImageFile != null)
                 {
                     string wwwRootpath = _webHostEnvironment.WebRootPath;
-                    string filename = Guid.NewGuid().ToString() + "_" + newuser.ImageFile.FileName;
+                    string filename = Guid.NewGuid().ToString() + "_" + NewMember.ImageFile.FileName;
                     string path = Path.Combine(wwwRootpath + "/images/", filename);
 
                     using (var fileStream = new FileStream(path, FileMode.Create))
                     {
-                        await newuser.ImageFile.CopyToAsync(fileStream);
+                        await NewMember.ImageFile.CopyToAsync(fileStream);
                     }
-                    newuser.ImagePath = filename;
+                    NewMember.ImagePath = filename;
                 }
 
-                User user = new User();
-                user.Fname = newuser.Fname;
-                user.Lname = newuser.Lname;
-                user.Email = newuser.Email;
-                user.ImagePath = newuser.ImagePath;
-
-
-                _context.Add(user);
+                _context.Add(NewMember);
                 await _context.SaveChangesAsync();
 
                 UserLogin userLogin = new UserLogin();
-                userLogin.Username = newuser.Username;
-                userLogin.Roleid = 3;
-                userLogin.Passwordd = newuser.Passwordd;
-                userLogin.Userid = user.Userid;
+                userLogin.Username = Username;
+                userLogin.Roleid = (decimal?)EnumRole.Member;
+                userLogin.Passwordd = Passwordd;
+                userLogin.Userid = NewMember.Userid;
 
                 _context.Add(userLogin);
                 await _context.SaveChangesAsync();
 
                 Member member = new Member();
-                member.Userid = user.Userid;
+                member.Userid = NewMember.Userid;
                 _context.Add(member);
                 await _context.SaveChangesAsync();
 
 
                 return RedirectToAction(nameof(Index));
             }
-            return View(newuser);
+            return View(NewMember);
         }
 
+
         // GET: Users/Edit/5
-        public IActionResult Edit(decimal? id)
+        public async Task<IActionResult> Edit(decimal? id)
         {
             ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
             ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
@@ -143,102 +124,82 @@ namespace GymCenter.Controllers
             {
                 return NotFound();
             }
-            var Member = (from User in _context.Users
-                          join UserLogin in _context.UserLogins
-                          on User.Userid equals UserLogin.Userid
-                          join findmember in _context.Members
-                          on User.Userid equals findmember.Userid
-                          where User.Userid == id
-                          select new JoinMemberUserTables
-                          {
-                              Userid = User.Userid,
-                              Fname = User.Fname,
-                              Lname = User.Lname,
-                              SubscriptionStart = findmember.SubscriptionStart,
-                              SubscriptionEnd = findmember.SubscriptionEnd,
-                              Email = User.Email,
-                              ImagePath = User.ImagePath,
-                              Planid = findmember.Planid,
-                              Username = UserLogin.Username,
-                              Passwordd = UserLogin.Passwordd,
+            var MemberDetails = await _context.Members
+            .Include(m => m.User)
+            .ThenInclude(u => u.UserLogins)
+            .Include(m => m.Plan)
+            .SingleOrDefaultAsync(m => m.Userid == id);
 
-
-                          }).FirstOrDefault();
-            if (Member == null)
+            if (MemberDetails == null)
             {
                 return NotFound();
             }
-            return View(Member);
+            return View(MemberDetails);
         }
 
-        // POST: Users/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("Userid,Fname,Lname,Username,Passwordd,Email,ImageFile")] JoinMemberUserTables member)
-
+        public async Task<IActionResult> Edit(decimal id, [Bind("Userid,Fname,Lname,Email,ImageFile")] User MemberNewDetails, string Username, string NewPassword, string ConfirmPassword)
         {
-            if (id != member.Userid)
+
+            if (id != MemberNewDetails.Userid)
             {
                 return NotFound();
             }
+            var MemberSavedDetails = await _context.Users
+                .Include(u => u.UserLogins)
+                .SingleOrDefaultAsync(u => u.Userid == MemberNewDetails.Userid);
 
-            if (ModelState.IsValid)
+            if (MemberSavedDetails == null)
             {
-                try
-                {
-                    if (member.ImageFile != null)
-                    {
-                        string wwwRootpath = _webHostEnvironment.WebRootPath;
-                        string filename = Guid.NewGuid().ToString() + "_" + member.ImageFile.FileName;
-                        string path = Path.Combine(wwwRootpath + "/images/", filename);
-
-                        using (var fileStream = new FileStream(path, FileMode.Create))
-                        {
-                            await member.ImageFile.CopyToAsync(fileStream);
-                        }
-                        member.ImagePath = filename;
-                    }
-
-                    var user = await _context.Users.FindAsync(id);
-                    user.Fname = member.Fname;
-                    user.Email = member.Email;
-                    user.Lname = member.Lname;
-                    user.ImagePath = member.ImagePath;
-
-
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
-
-
-                    var userlogin = await _context.UserLogins
-                               .Where(ul => ul.Userid == user.Userid)
-                               .FirstOrDefaultAsync();
-                    userlogin.Username = member.Username;
-                    userlogin.Passwordd = member.Passwordd;
-                    _context.Update(userlogin);
-                    await _context.SaveChangesAsync();
-
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UserExists(member.Userid))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return NotFound("User not found");
             }
-            return View(member);
+
+            var MemberSavedUserLogin = MemberSavedDetails.UserLogins.FirstOrDefault();
+            if (MemberSavedUserLogin == null)
+            {
+                return NotFound("User login details not found");
+            }
+
+            if (MemberNewDetails.ImageFile != null)
+            {
+                string wwwRootPath = _webHostEnvironment.WebRootPath;
+                string filename = Guid.NewGuid().ToString() + "_" + MemberNewDetails.ImageFile.FileName;
+                string path = Path.Combine(wwwRootPath + "/images/", filename);
+
+                using (var fileStream = new FileStream(path, FileMode.Create))
+                {
+                    await MemberNewDetails.ImageFile.CopyToAsync(fileStream);
+                }
+                MemberSavedDetails.ImagePath = filename;
+            }
+
+            if (!string.IsNullOrEmpty(NewPassword))
+            {
+                if (NewPassword == ConfirmPassword)
+                {
+                    MemberSavedUserLogin.Passwordd = NewPassword;
+                }
+                else
+                {
+                    TempData["ErrorPassMatch"] = "The new password and confirmation password do not match!";
+                    return RedirectToAction(nameof(Edit));
+                }
+            }
+
+            MemberSavedDetails.Fname = MemberNewDetails.Fname;
+            MemberSavedDetails.Lname = MemberNewDetails.Lname;
+            MemberSavedDetails.Email = MemberNewDetails.Email;
+            MemberSavedUserLogin.Username = Username;
+
+            _context.Update(MemberSavedDetails);
+            await _context.SaveChangesAsync();
+
+            TempData["UpdateMemberDetailes"] = "Your changes has been updated successfully!";
+            return RedirectToAction(nameof(Edit));
         }
 
         // GET: Users/Delete/5
-        public IActionResult Delete(decimal? id)
+        public async Task<IActionResult> Delete(decimal? id)
         {
             ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
             ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
@@ -247,30 +208,17 @@ namespace GymCenter.Controllers
             {
                 return NotFound();
             }
-            var Member = (from User in _context.Users
-                          join UserLogin in _context.UserLogins
-                          on User.Userid equals UserLogin.Userid
-                          join findmember in _context.Members
-                          on User.Userid equals findmember.Userid
-                          where User.Userid == id
-                          select new JoinMemberUserTables
-                          {
-                              Userid = User.Userid,
-                              Fname = User.Fname,
-                              Lname = User.Lname,
-                              SubscriptionStart = findmember.SubscriptionStart,
-                              SubscriptionEnd = findmember.SubscriptionEnd,
-                              Email = User.Email,
-                              ImagePath = User.ImagePath,
-                              Planid = findmember.Planid,
-                              Username = UserLogin.Username,
-                              Passwordd = UserLogin.Passwordd
-                          }).FirstOrDefault();
-            if (Member == null)
+            var MemberDetails = await _context.Members
+            .Include(m => m.User)
+            .ThenInclude(u => u.UserLogins)
+            .Include(m => m.Plan)
+            .SingleOrDefaultAsync(m => m.Userid == id);
+
+            if (MemberDetails == null)
             {
                 return NotFound();
             }
-            return View(Member);
+            return View(MemberDetails);
         }
 
         // POST: Users/Delete/5
@@ -282,27 +230,17 @@ namespace GymCenter.Controllers
             {
                 return Problem("Entity set 'ModelContext.Users'  is null.");
             }
-            var user = await _context.Users.FindAsync(id);
-            var userlogin = await _context.UserLogins
-                              .Where(ul => ul.Userid == user.Userid)
-                              .FirstOrDefaultAsync();
-            var member = await _context.Members
-                              .Where(ul => ul.Userid == user.Userid)
-                              .FirstOrDefaultAsync();
-            if (user != null)
+            var MemberDetails = await _context.Members
+            .Include(m => m.User)
+            .ThenInclude(u => u.UserLogins)
+            .Include(m => m.Plan)
+            .SingleOrDefaultAsync(m => m.Userid == id);
+            if (MemberDetails != null)
             {
-                _context.Users.Remove(user);
+                _context.UserLogins.Remove(MemberDetails.User.UserLogins.SingleOrDefault(x => x.Userid == MemberDetails.Userid));
+                _context.Members.Remove(MemberDetails);
+                _context.Users.Remove(MemberDetails.User);
             }
-            if (userlogin != null)
-            {
-                _context.UserLogins.Remove(userlogin);
-            }
-            if (member != null)
-            {
-                _context.Members.Remove(member);
-            }
-
-
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

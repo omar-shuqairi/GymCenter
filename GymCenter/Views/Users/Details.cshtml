@@ -1,42 +1,57 @@
-﻿@model GymCenter.Models.User
-
+﻿@model GymCenter.Models.Member
 @{
-    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/AdminLayout.cshtml";
+
 }
 
-<h1>Details</h1>
+<h1 class="text-center mt-4 mb-4">Member Details</h1>
 
-<div>
-    <h4>User</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Fname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Fname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Lname)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Lname)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImagePath)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImagePath)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Userid">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="card-title mb-0">User Profile</h4>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4 fw-bold">First Name:</dt>
+                <dd class="col-sm-8">@Model.User.Fname</dd>
+
+                <dt class="col-sm-4 fw-bold">Last Name:</dt>
+                <dd class="col-sm-8">@Model.User.Lname</dd>
+
+                <dt class="col-sm-4 fw-bold">Username:</dt>
+                <dd class="col-sm-8">@Model.User.UserLogins.SingleOrDefault()?.Username</dd>
+
+                <dt class="col-sm-4 fw-bold">Password:</dt>
+                <dd class="col-sm-8">@Model.User.UserLogins.SingleOrDefault()?.Passwordd</dd>
+
+                <dt class="col-sm-4 fw-bold">Email:</dt>
+                <dd class="col-sm-8">@Model.User.Email</dd>
+
+                <dt class="col-sm-4 fw-bold">Subscription Start:</dt>
+                <dd class="col-sm-8">
+                    @(Model.SubscriptionStart != null ? Model.SubscriptionStart?.ToShortDateString() : "Not subscribed")
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">Subscription End:</dt>
+                <dd class="col-sm-8">
+                    @(Model.SubscriptionEnd != null ? Model.SubscriptionEnd?.ToShortDateString() : "Not subscribed")
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">Plan Name:</dt>
+                <dd class="col-sm-8">
+                    @(Model.Plan?.Planname != null ? Model.Plan?.Planname : "Not subscribed")
+                </dd>
+
+                <dt class="col-sm-4 fw-bold">Profile Image:</dt>
+                <dd class="col-sm-8">
+                    <img src="@Url.Content("~/images/" + Model.User.ImagePath)" asp-append-version="true" class="img-thumbnail shadow-sm" style="width: 150px; height: 150px;" />
+                </dd>
+            </dl>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a asp-action="Edit" asp-route-id="@Model?.Userid" class="btn btn-warning text-white">Edit</a>
+            <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
 </div>

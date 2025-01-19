@@ -192,6 +192,7 @@ namespace GymCenter.Controllers
             TempData["UpdateProfile"] = "Your profile has been updated successfully!";
             return RedirectToAction(nameof(Profile));
         }
+
         public async Task<IActionResult> MyPlan()
         {
             int? memberuserid = HttpContext.Session.GetInt32("MemberuserId");
