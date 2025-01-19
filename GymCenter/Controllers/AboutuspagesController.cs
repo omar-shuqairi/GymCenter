@@ -100,45 +100,47 @@ namespace GymCenter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(decimal id, [Bind("Id,Title,Paragraph1,Paragraph2,Videourl,ImageFile")] Aboutuspage aboutuspage)
         {
+            var AboutUsPageSaved = await _context.Aboutuspages.FindAsync(id);
             if (id != aboutuspage.Id)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            try
             {
-                try
+                if (aboutuspage.ImageFile != null)
                 {
-                    if (aboutuspage.ImageFile != null)
+                    string wwwRootpath = _webHostEnvironment.WebRootPath;
+                    string filename = Guid.NewGuid().ToString() + "_" + aboutuspage.ImageFile.FileName;
+                    string path = Path.Combine(wwwRootpath + "/images/", filename);
+
+                    using (var fileStream = new FileStream(path, FileMode.Create))
                     {
-                        string wwwRootpath = _webHostEnvironment.WebRootPath;
-                        string filename = Guid.NewGuid().ToString() + "_" + aboutuspage.ImageFile.FileName;
-                        string path = Path.Combine(wwwRootpath + "/images/", filename);
-
-                        using (var fileStream = new FileStream(path, FileMode.Create))
-                        {
-                            await aboutuspage.ImageFile.CopyToAsync(fileStream);
-                        }
-                        aboutuspage.Backgroundvideoimg = filename;
+                        await aboutuspage.ImageFile.CopyToAsync(fileStream);
                     }
-
-
-                    _context.Update(aboutuspage);
-                    await _context.SaveChangesAsync();
+                    AboutUsPageSaved.Backgroundvideoimg = filename;
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AboutuspageExists(aboutuspage.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+
+                AboutUsPageSaved.Paragraph1 = aboutuspage.Paragraph1;
+                AboutUsPageSaved.Paragraph2 = aboutuspage.Paragraph2;
+                AboutUsPageSaved.Videourl = aboutuspage.Videourl;
+                AboutUsPageSaved.Title = aboutuspage.Title;
+                _context.Update(AboutUsPageSaved);
+                await _context.SaveChangesAsync();
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!AboutuspageExists(aboutuspage.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
+
             return View(aboutuspage);
         }
 
