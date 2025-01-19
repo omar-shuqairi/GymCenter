@@ -1,4 +1,4 @@
-﻿@model GymCenter.Models.JoinTrainerUserTables
+﻿@model GymCenter.Models.UserLogin
 
 @{
     Layout = "~/Views/Shared/AdminLayout.cshtml";
@@ -13,46 +13,23 @@
         <h4 class="text-center mt-3">Trainer Details</h4>
         <hr />
         <dl class="row">
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Fname)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Fname)
-            </dd>
+            <dt class="col-sm-4 fw-bold">First Name:</dt>
+            <dd class="col-sm-8">@Model.User.Fname</dd>
 
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Lname)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Lname)
-            </dd>
+            <dt class="col-sm-4 fw-bold">Last Name:</dt>
+            <dd class="col-sm-8">@Model.User.Lname</dd>
 
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Username)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Username)
-            </dd>
+            <dt class="col-sm-4 fw-bold">Username:</dt>
+            <dd class="col-sm-8">@Model.Username</dd>
 
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Passwordd)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Passwordd)
-            </dd>
+            <dt class="col-sm-4 fw-bold">Password:</dt>
+            <dd class="col-sm-8">@Model.Passwordd</dd>
 
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.Email)
-            </dt>
+            <dt class="col-sm-4 fw-bold">Email:</dt>
+            <dd class="col-sm-8">@Model.User.Email</dd>
+            <dt class="col-sm-4 fw-bold">Profile Image:</dt>
             <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Email)
-            </dd>
-
-            <dt class="col-sm-4">
-                @Html.DisplayNameFor(model => model.ImagePath)
-            </dt>
-            <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.ImagePath)
+                <img src="@Url.Content("~/images/" + Model.User.ImagePath)" asp-append-version="true" class="img-thumbnail shadow-sm" style="width: 150px; height: 150px;" />
             </dd>
         </dl>
 

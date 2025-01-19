@@ -1,4 +1,4 @@
-﻿@model GymCenter.Models.JoinTrainerUserTables
+﻿@model GymCenter.Models.UserLogin
 
 @{
     Layout = "~/Views/Shared/AdminLayout.cshtml";
@@ -12,34 +12,34 @@
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
             <input type="hidden" asp-for="Userid" />
             <div class="form-group">
-                <label asp-for="Fname" class="form-label"></label>
-                <input asp-for="Fname" class="form-control" />
-                <span asp-validation-for="Fname" class="text-danger"></span>
+                <label for="Fname" class="form-label">First Name</label>
+                <input id="Fname" name="Fname" class="form-control" value="@Model.User.Fname" required />
             </div>
             <div class="form-group">
-                <label asp-for="Lname" class="form-label"></label>
-                <input asp-for="Lname" class="form-control" />
-                <span asp-validation-for="Lname" class="text-danger"></span>
+                <label for="Lname" class="form-label">Last Name</label>
+                <input id="Lname" name="Lname" class="form-control" value="@Model.User.Lname" required />
             </div>
             <div class="form-group">
-                <label asp-for="Username" class="form-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+                <label for="Username" class="form-label">Username</label>
+                <input id="Username" name="Username" class="form-control" value="@Model.Username" required />
             </div>
             <div class="form-group">
-                <label asp-for="Passwordd" class="form-label"></label>
-                <input asp-for="Passwordd" class="form-control" type="password" />
-                <span asp-validation-for="Passwordd" class="text-danger"></span>
+                <label for="NewPassword" class="form-label">New Password</label>
+                <input id="NewPassword" name="NewPassword" class="form-control" type="password" val />
+            </div>
+
+            <div class="form-group">
+                <label for="ConfirmPassword" class="form-label">Confirm New Password</label>
+                <input id="ConfirmPassword" name="ConfirmPassword" class="form-control" type="password" val />
+
             </div>
             <div class="form-group">
-                <label asp-for="Email" class="form-label"></label>
-                <input asp-for="Email" class="form-control" type="email" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+                <label for="Email" class="form-label">Email</label>
+                <input id="Email" name="Email" class="form-control" type="email" required value="@Model.User.Email" required />
             </div>
             <div class="form-group">
-                <label asp-for="ImageFile" class="form-label"></label>
-                <input asp-for="ImageFile" class="form-control" type="file" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
+                <label for="ImageFile" class="form-label"></label>
+                <input id="ImageFile" name="ImageFile" class="form-control" type="file" />
             </div>
             <div class="d-grid">
                 <input type="submit" value="Save" class="btn btn-primary" />
@@ -50,3 +50,42 @@
         </div>
     </div>
 </div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+     function previewProfilePic(event) {
+        const reader = new FileReader();
+        reader.onload = function () {
+            const output = document.getElementById('profilePreview');
+            output.src = reader.result;
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+    @if (TempData["UpdateTrainerDetailes"] != null)
+    {
+        <text>
+                        Swal.fire({
+                        title: 'Done!',
+                        text: '@TempData["UpdateTrainerDetailes"] ',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+        </text>
+    }
+    @if (TempData["ErrorPassMatch"] != null)
+    {
+        <text>
+                    Swal.fire({
+                        title: 'Failed',
+                        text: '@TempData["ErrorPassMatch"]',
+                        icon: 'error',
+                        confirmButtonText: 'OK',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false
+                    });
+        </text>
+    }
+</script>

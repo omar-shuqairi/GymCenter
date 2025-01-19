@@ -2,30 +2,22 @@
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 
 }
-@model IEnumerable<GymCenter.Models.JoinTrainerUserTables>
-
-@{
-    ViewData["Title"] = "Index";
-}
-
-
+@model IEnumerable<GymCenter.Models.UserLogin>
 
 <div class="container-xl mt-4">
     <h1 class="mb-4 text-center">Index</h1>
 
     <p>
-        <a asp-action="Create" class="btn btn-primary mb-3">Create New</a>
+        <a asp-action="Create" class="btn btn-primary mb-3">Create New Trainer</a>
     </p>
 
     <table class="table table-bordered table-hover table-striped align-middle text-center">
         <thead class="table-dark">
             <tr>
-                <th>@Html.DisplayNameFor(model => model.Fname)</th>
-                <th>@Html.DisplayNameFor(model => model.Lname)</th>
-                <th>@Html.DisplayNameFor(model => model.Username)</th>
-                <th>@Html.DisplayNameFor(model => model.Passwordd)</th>
-                <th>@Html.DisplayNameFor(model => model.Email)</th>
-                <th>@Html.DisplayNameFor(model => model.ImagePath)</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Profile Image</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -33,13 +25,11 @@
             @foreach (var item in Model)
             {
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Fname)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Lname)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Username)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Passwordd)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Email)</td>
+                    <td>@item.User.Fname</td>
+                    <td>@item.User.Lname</td>
+                    <td>@item.User.Email</td>
                     <td>
-                        <img src="@Url.Content("~/images/" + item.ImagePath)" asp-append-version="true" class="img-thumbnail" style="width: 100px; height: 100px;" />
+                        <img src="@Url.Content("~/images/" + item.User.ImagePath)" asp-append-version="true" class="img-thumbnail" style="width: 100px; height: 100px;" />
                     </td>
                     <td>
                         <div class="btn-group">

@@ -28,12 +28,12 @@ namespace GymCenter.Controllers
             ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
             ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
             ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
-            var MemberDetails = await _context.Members
+            var MembersList = await _context.Members
             .Include(m => m.User)
             .ThenInclude(u => u.UserLogins)
             .Include(m => m.Plan)
             .ToListAsync();
-            return View(MemberDetails);
+            return View(MembersList);
 
         }
 
@@ -220,6 +220,14 @@ namespace GymCenter.Controllers
             }
             return View(MemberDetails);
         }
+
+
+
+
+
+
+
+
 
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]

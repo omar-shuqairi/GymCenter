@@ -1,15 +1,15 @@
-﻿@model GymCenter.Models.Member
+﻿@model GymCenter.Models.UserLogin
 @{
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 
 }
 
-<h1 class="text-center mt-4 mb-4">Member Details</h1>
+<h1 class="text-center mt-4 mb-4">Trainer Details</h1>
 
 <div class="container">
     <div class="card shadow-sm">
-        <div class="card-header text-white">
-            <h4 class="card-title mb-0">Member Details</h4>
+        <div class="card-header  text-white">
+            <h4 class="card-title mb-0">Trainer Details</h4>
         </div>
         <div class="card-body">
             <dl class="row">
@@ -20,29 +20,13 @@
                 <dd class="col-sm-8">@Model.User.Lname</dd>
 
                 <dt class="col-sm-4 fw-bold">Username:</dt>
-                <dd class="col-sm-8">@Model.User.UserLogins.SingleOrDefault()?.Username</dd>
+                <dd class="col-sm-8">@Model.Username</dd>
 
                 <dt class="col-sm-4 fw-bold">Password:</dt>
-                <dd class="col-sm-8">@Model.User.UserLogins.SingleOrDefault()?.Passwordd</dd>
+                <dd class="col-sm-8">@Model.Passwordd</dd>
 
                 <dt class="col-sm-4 fw-bold">Email:</dt>
                 <dd class="col-sm-8">@Model.User.Email</dd>
-
-                <dt class="col-sm-4 fw-bold">Subscription Start:</dt>
-                <dd class="col-sm-8">
-                    @(Model.SubscriptionStart != null ? Model.SubscriptionStart?.ToShortDateString() : "Not subscribed")
-                </dd>
-
-                <dt class="col-sm-4 fw-bold">Subscription End:</dt>
-                <dd class="col-sm-8">
-                    @(Model.SubscriptionEnd != null ? Model.SubscriptionEnd?.ToShortDateString() : "Not subscribed")
-                </dd>
-
-                <dt class="col-sm-4 fw-bold">Plan Name:</dt>
-                <dd class="col-sm-8">
-                    @(Model.Plan?.Planname != null ? Model.Plan?.Planname : "Not subscribed")
-                </dd>
-
                 <dt class="col-sm-4 fw-bold">Profile Image:</dt>
                 <dd class="col-sm-8">
                     <img src="@Url.Content("~/images/" + Model.User.ImagePath)" asp-append-version="true" class="img-thumbnail shadow-sm" style="width: 150px; height: 150px;" />

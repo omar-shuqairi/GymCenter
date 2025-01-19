@@ -1,4 +1,4 @@
-﻿@model GymCenter.Models.JoinTrainerUserTables
+﻿@model GymCenter.Models.User
 
 @{
     Layout = "~/Views/Shared/AdminLayout.cshtml";
@@ -13,32 +13,30 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Fname" class="control-label"></label>
-                <input asp-for="Fname" class="form-control" />
+                <input asp-for="Fname" class="form-control" required />
                 <span asp-validation-for="Fname" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Lname" class="control-label"></label>
-                <input asp-for="Lname" class="form-control" />
+                <input asp-for="Lname" class="form-control" required />
                 <span asp-validation-for="Lname" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+                <label for="Username" class="control-label">Username</label>
+                <input id="Username" name="Username" class="form-control" required />
             </div>
             <div class="form-group">
-                <label asp-for="Passwordd" class="control-label"></label>
-                <input asp-for="Passwordd" class="form-control" />
-                <span asp-validation-for="Passwordd" class="text-danger"></span>
+                <label for="Passwordd" class="control-label">Password</label>
+                <input id="Passwordd" name="Passwordd" class="form-control" required />
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
+                <input asp-for="Email" class="form-control" required />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="ImageFile" class="control-label"></label>
-                <input asp-for="ImageFile" class="form-control" />
+                <input asp-for="ImageFile" class="form-control" required />
                 <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group  d-grid">
