@@ -3,56 +3,57 @@
 @{
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
-<h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Locationn)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Phonenumber)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mapurl)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Locationn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Phonenumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mapurl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<h1 class="text-center mb-4">Contact List</h1>
+
+<div class="card shadow-lg">
+    <div class="card-body">
+        <table class="table table-bordered table-hover table-striped align-middle text-center">
+            <thead class="table-dark">
+                <tr class="text-center">
+                    <th>
+                        @Html.DisplayNameFor(model => model.Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Locationn)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Phonenumber)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Mapurl)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="text-center align-middle">
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Locationn)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Phonenumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Mapurl)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning btn-sm">Edit</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
