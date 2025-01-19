@@ -21,7 +21,10 @@ namespace GymCenter.Controllers
         // GET: Contactforms
         public async Task<IActionResult> Index()
         {
-              return _context.Contactforms != null ? 
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
+            return _context.Contactforms != null ?
                           View(await _context.Contactforms.ToListAsync()) :
                           Problem("Entity set 'ModelContext.Contactforms'  is null.");
         }
@@ -120,6 +123,9 @@ namespace GymCenter.Controllers
         // GET: Contactforms/Delete/5
         public async Task<IActionResult> Delete(decimal? id)
         {
+            ViewData["AdmimFullName"] = HttpContext.Session.GetString("AdminFullName");
+            ViewData["AdminEmail"] = HttpContext.Session.GetString("AdminEmail");
+            ViewData["AdminImg"] = HttpContext.Session.GetString("AdminImg");
             if (id == null || _context.Contactforms == null)
             {
                 return NotFound();
@@ -149,14 +155,14 @@ namespace GymCenter.Controllers
             {
                 _context.Contactforms.Remove(contactform);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ContactformExists(decimal id)
         {
-          return (_context.Contactforms?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Contactforms?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

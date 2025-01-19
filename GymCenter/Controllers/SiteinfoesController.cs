@@ -103,13 +103,14 @@ namespace GymCenter.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(decimal id, [Bind("Id,Sitename,SiteImageFile,LogoImageFile,SharedImageFile")] Siteinfo siteinfo)
         {
+
+            var SiteinfoSaved = await _context.Siteinfos.FindAsync(id);
             if (id != siteinfo.Id)
             {
                 return NotFound();
             }
 
-            var existingSiteinfo = await _context.Siteinfos.FindAsync(id);
-            if (existingSiteinfo == null)
+            if (SiteinfoSaved == null)
             {
                 return NotFound();
             }
@@ -118,35 +119,45 @@ namespace GymCenter.Controllers
             {
                 try
                 {
-                    // Preserve existing image paths if no new files are uploaded and delete old images if new ones are uploaded
-                    existingSiteinfo.Sitename = siteinfo.Sitename ?? existingSiteinfo.Sitename;
 
                     if (siteinfo.SiteImageFile != null)
                     {
-                        // Delete old image
-                        DeleteFile(existingSiteinfo.SiteImagePath);
-                        // Upload new image
-                        existingSiteinfo.SiteImagePath = await UploadFile(siteinfo.SiteImageFile);
-                    }
+                        string wwwRootpath = _webHostEnvironment.WebRootPath;
+                        string filename = Guid.NewGuid().ToString() + "_" + siteinfo.SiteImageFile.FileName;
+                        string path = Path.Combine(wwwRootpath + "/images/", filename);
 
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await siteinfo.SiteImageFile.CopyToAsync(fileStream);
+                        }
+                        SiteinfoSaved.SiteImagePath = filename;
+                    }
                     if (siteinfo.LogoImageFile != null)
                     {
-                        // Delete old logo
-                        DeleteFile(existingSiteinfo.LogoImagePath);
-                        // Upload new logo
-                        existingSiteinfo.LogoImagePath = await UploadFile(siteinfo.LogoImageFile);
-                    }
+                        string wwwRootpath = _webHostEnvironment.WebRootPath;
+                        string filename = Guid.NewGuid().ToString() + "_" + siteinfo.LogoImageFile.FileName;
+                        string path = Path.Combine(wwwRootpath + "/images/", filename);
 
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await siteinfo.LogoImageFile.CopyToAsync(fileStream);
+                        }
+                        SiteinfoSaved.LogoImagePath = filename;
+                    }
                     if (siteinfo.SharedImageFile != null)
                     {
-                        // Delete old shared image
-                        DeleteFile(existingSiteinfo.SharedImagePath);
-                        // Upload new shared image
-                        existingSiteinfo.SharedImagePath = await UploadFile(siteinfo.SharedImageFile);
+                        string wwwRootpath = _webHostEnvironment.WebRootPath;
+                        string filename = Guid.NewGuid().ToString() + "_" + siteinfo.SharedImageFile.FileName;
+                        string path = Path.Combine(wwwRootpath + "/images/", filename);
+
+                        using (var fileStream = new FileStream(path, FileMode.Create))
+                        {
+                            await siteinfo.SharedImageFile.CopyToAsync(fileStream);
+                        }
+                        SiteinfoSaved.SharedImagePath = filename;
                     }
 
-                    // Save changes to the database
-                    _context.Update(existingSiteinfo);
+                    _context.Update(SiteinfoSaved);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -163,36 +174,6 @@ namespace GymCenter.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(siteinfo);
-        }
-
-        // Helper method to upload the file
-        private async Task<string> UploadFile(IFormFile file)
-        {
-            string wwwRootpath = _webHostEnvironment.WebRootPath;
-            string filename = Guid.NewGuid().ToString() + "_" + file.FileName;
-            string path = Path.Combine(wwwRootpath + "/images/", filename);
-
-            using (var fileStream = new FileStream(path, FileMode.Create))
-            {
-                await file.CopyToAsync(fileStream);
-            }
-
-            return filename;
-        }
-
-        // Helper method to delete old file
-        private void DeleteFile(string filePath)
-        {
-            if (string.IsNullOrEmpty(filePath))
-                return;
-
-            string wwwRootpath = _webHostEnvironment.WebRootPath;
-            string fullPath = Path.Combine(wwwRootpath + "/images/", filePath);
-
-            if (System.IO.File.Exists(fullPath))
-            {
-                System.IO.File.Delete(fullPath);
-            }
         }
         // GET: Siteinfoes/Delete/5
         public async Task<IActionResult> Delete(decimal? id)
