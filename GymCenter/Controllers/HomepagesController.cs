@@ -114,46 +114,45 @@ namespace GymCenter.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(decimal id, [Bind("Id,ImageFile,Title1,Title2,Titlebtn")] Homepage homepage)
         {
+            var HomePgaeSaved = await _context.Homepages.FindAsync(id);
             if (id != homepage.Id)
             {
                 return NotFound();
             }
-
-            if (ModelState.IsValid)
+            try
             {
-                try
+                if (homepage.ImageFile != null)
                 {
-                    if (homepage.ImageFile != null)
-                    {
-                        string wwwRootpath = _webHostEnvironment.WebRootPath;
-                        string filename = Guid.NewGuid().ToString() + "_" + homepage.ImageFile.FileName;
-                        string path = Path.Combine(wwwRootpath + "/images/", filename);
+                    string wwwRootpath = _webHostEnvironment.WebRootPath;
+                    string filename = Guid.NewGuid().ToString() + "_" + homepage.ImageFile.FileName;
+                    string path = Path.Combine(wwwRootpath + "/images/", filename);
 
-                        using (var fileStream = new FileStream(path, FileMode.Create))
-                        {
-                            await homepage.ImageFile.CopyToAsync(fileStream);
-                        }
-                        homepage.ImagePath = filename;
-                    }
-                    _context.Update(homepage);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!HomepageExists(homepage.Id))
+                    using (var fileStream = new FileStream(path, FileMode.Create))
                     {
-                        return NotFound();
+                        await homepage.ImageFile.CopyToAsync(fileStream);
                     }
-                    else
-                    {
-                        throw;
-                    }
+                    HomePgaeSaved.ImagePath = filename;
                 }
-                return RedirectToAction(nameof(Index));
+                HomePgaeSaved.Title1 = homepage.Title1;
+                HomePgaeSaved.Title2 = homepage.Title2;
+                HomePgaeSaved.Titlebtn = homepage.Titlebtn;
+                _context.Update(HomePgaeSaved);
+                await _context.SaveChangesAsync();
             }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!HomepageExists(homepage.Id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return RedirectToAction(nameof(Index));
             return View(homepage);
         }
 

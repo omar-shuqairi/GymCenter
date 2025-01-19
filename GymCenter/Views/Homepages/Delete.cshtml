@@ -3,10 +3,9 @@
 @{
     Layout = "~/Views/Shared/AdminLayout.cshtml";
 }
-
 <div class="container style=" margin-top: 5.5rem;"">
     <div class="card shadow-lg">
-        <div class="card-header bg-danger text-white">
+        <div class="card-header  text-white">
             <h1 class="card-title">Delete Homepage Entry</h1>
         </div>
         <div class="card-body">
@@ -14,9 +13,6 @@
             <hr />
             <h4 class="text-primary">Homepage Details</h4>
             <dl class="row mt-4">
-                <dt class="col-sm-3 fw-bold">Image Path</dt>
-                <dd class="col-sm-9">@Html.DisplayFor(model => model.ImagePath)</dd>
-
                 <dt class="col-sm-3 fw-bold">Title 1</dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.Title1)</dd>
 
@@ -25,6 +21,10 @@
 
                 <dt class="col-sm-3 fw-bold">Button Title</dt>
                 <dd class="col-sm-9">@Html.DisplayFor(model => model.Titlebtn)</dd>
+
+                <dt class="col-sm-3 fw-bold">Image</dt>
+                <img src="@Url.Content("~/images/" + Model.ImagePath)" asp-append-version="true" class="img-thumbnail shadow-sm" style="width: 150px; height: 150px;" />
+
             </dl>
         </div>
         <div class="card-footer text-center">
