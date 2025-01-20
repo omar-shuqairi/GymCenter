@@ -14,11 +14,12 @@
 <body>
 
     <div class="payment-container">
-
         <h2>Selected Plan</h2>
         <h3>@Model.Planname</h3>
         <h2>Payment Details</h2>
         <form  method="POST" class="payment-form" id="payment-form">
+            <input type="hidden" name="PlanID" value="@Model.Planid" />
+            <input type="hidden" name="Durationinmonths" value="@Model.Durationinmonths" />
             <div class="form-group">
                 <label for="Cardnumber">Card Number</label>
                 <input type="text" id="Cardnumber" name="Cardnumber" placeholder="Enter your card number" required>
@@ -44,30 +45,37 @@
         <a asp-controller="Member" asp-action="Services">Cancel Payment</a>
     </div>
 
-
-    <!-- Include SweetAlert Library -->
-@*     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script>
-        const pay = document.getElementById('payment-form');
-        pay.addEventListener('submit', function (event) {
-            event.preventDefault();
-
-            // Save a reference to the form
-            const form = this;
-
-            // Show a SweetAlert message
-            Swal.fire({
-                title: 'Done!',
-                text: 'Thank you for subscribing to our plans!',
-                icon: 'success',
-                confirmButtonText: 'OK',
-                allowOutsideClick: false,
-            allowEscapeKey: false
-            }).then(() => {
-                // Submit the form programmatically after the alert
-                form.submit();
-            });
-        });
-    </script> *@
 </body>
 </html>
+
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    @if (TempData["ErrorCard"] != null)
+    {
+        <text>
+                    Swal.fire({
+                    title: 'Failed!',
+                    text: '@TempData["ErrorCard"] ',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+        </text>
+    }
+    @if (TempData["ErrorBalance"] != null)
+    {
+        <text>
+                Swal.fire({
+                    title: 'Failed',
+                text: '@TempData["ErrorBalance"]',
+                    icon: 'error',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+        </text>
+    }
+</script>
+

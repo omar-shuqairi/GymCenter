@@ -32,6 +32,8 @@
         </div>
         <div class="row justify-content-center">
             <div class="col-lg-4 col-md-8">
+                @if (Model.Item1.Plan != null)
+                {
                 <div class="ps-item">
                     <h3>@Model.Item1.Plan.Durationinmonths Month</h3>
                     <div class="pi-price">
@@ -47,8 +49,33 @@
                         <li>@Model.Item1.Plan.Goals</li>
                     </ul>
                     <h3>your Subscription end at @Model.Item1.SubscriptionEnd.Value.ToShortDateString()</h3>
-                </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="ps-item">
+                        <h3>No Plan Available</h3>
+                        <p>You have not subscribed to any plan yet.</p>
+                    </div>
+                }
             </div>
         </div>
     </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    @if (TempData["SuccessfulPayment"] != null)
+    {
+        <text>
+                    Swal.fire({
+                    title: 'Done!',
+                    text: '@TempData["SuccessfulPayment"] ',
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false
+                });
+        </text>
+    }
+</script>

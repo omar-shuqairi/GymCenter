@@ -94,13 +94,17 @@
 
       <div class="Invoice-container">
           <h2>Your invoices</h2>
-         @foreach (var invoice in Model.Item1.Invoices)
-        {
-          <p>
-             Invoice #@invoice.Invoiceid -
-             <a href="@Url.Action("DownloadInvoice", "Member", new { invoiceId = invoice.Invoiceid })">Download</a>
-          </p>
-         }
+        <p>
+            Invoice-
+            @if (Model.Item1.Invoices != null && Model.Item1.Invoices.SingleOrDefault() != null)
+            {
+                <a href="@Url.Action("DownloadInvoice", "Member", new { invoiceId = Model.Item1.Invoices.SingleOrDefault().Invoiceid })">Download</a>
+            }
+            else
+            {
+                <span>No invoice available</span>
+            }
+        </p>
   </div>
 
 

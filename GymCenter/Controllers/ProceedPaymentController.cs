@@ -24,25 +24,23 @@ namespace GymCenter.Controllers
         public async Task<IActionResult> Index(int PlanId)
         {
             var selectedPlan = await _context.Workoutplans.FirstOrDefaultAsync(p => p.Planid == PlanId);
-            TempData["PlanID"] = selectedPlan.Planid.ToString();
-            TempData["Durationinmonths"] = selectedPlan.Durationinmonths.ToString();
             return View(selectedPlan);
         }
         [HttpPost]
-        public async Task<IActionResult> Index([Bind("Cardnumber,Cvv,Expirydate")] Creditcard MemberCreditCard, decimal amount)
+        public async Task<IActionResult> Index([Bind("Cardnumber,Cvv,Expirydate")] Creditcard MemberCreditCard, decimal amount, int PlanID, decimal Durationinmonths)
         {
             string MemberEmail = HttpContext.Session.GetString("MemberEmail");
-            int PlanID = Convert.ToInt32(TempData["PlanID"]);
-            int Durationinmonths = Convert.ToInt32(TempData["Durationinmonths"]);
             int? memberUserId = HttpContext.Session.GetInt32("MemberuserId");
             var dbCreditCard = await _context.Creditcards.FirstOrDefaultAsync(c => c.Cardnumber == MemberCreditCard.Cardnumber);
-            if (dbCreditCard == null)
+            if (dbCreditCard == null || dbCreditCard.Cvv != MemberCreditCard.Cvv || dbCreditCard.Expirydate.Value.ToShortDateString() != MemberCreditCard.Expirydate.Value.ToShortDateString())
             {
-                return NotFound("Credit card not found.");
+                TempData["ErrorCard"] = "Credit card not found!";
+                return RedirectToAction(nameof(Index), new { PlanId = PlanID });
             }
             if (dbCreditCard.Balance < amount)
             {
-                return NotFound("Insufficient balance.");
+                TempData["ErrorBalance"] = "Insufficient balance!";
+                return RedirectToAction(nameof(Index), new { PlanId = PlanID });
             }
             dbCreditCard.Balance -= amount;
             _context.Creditcards.Update(dbCreditCard);
@@ -62,7 +60,8 @@ namespace GymCenter.Controllers
                 return NotFound("Member not found.");
             }
             member.SubscriptionStart = DateTime.Now;
-            member.SubscriptionEnd = DateTime.Now.AddMonths(Durationinmonths);
+            member.SubscriptionEnd = DateTime.Now.AddMonths((int)Durationinmonths);
+
             member.Planid = PlanID;
             _context.Members.Update(member);
             await _context.SaveChangesAsync();
@@ -88,11 +87,11 @@ namespace GymCenter.Controllers
             };
             await _context.Invoices.AddAsync(invoice);
             await _context.SaveChangesAsync();
-
             string subject = "Your Gym Center Invoice";
             string body = "<p>Thank you for your payment. Please find your invoice attached.</p>";
             await _emailService.SendEmailAsync(MemberEmail, subject, body, pdfBytes, "Invoice.pdf");
-            return RedirectToAction("Home", "Member");
+            TempData["SuccessfulPayment"] = "Your payment was successful! Thank you for your subscribing!";
+            return RedirectToAction("MyPlan", "Member");
         }
         private byte[] GenerateInvoicePdf(Payment payment, Member member, UserLogin userlogin, User user, Workoutplan plan)
         {

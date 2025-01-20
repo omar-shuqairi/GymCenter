@@ -27,7 +27,7 @@ namespace GymCenter.Services
                     From = new MailAddress(emailSettings["FromEmail"]),
                     Subject = subject,
                     Body = body,
-                    IsBodyHtml = true // Set to true if you want HTML content in the email
+                    IsBodyHtml = true
                 };
 
                 mailMessage.To.Add(toEmail);
@@ -49,12 +49,12 @@ namespace GymCenter.Services
                     From = new MailAddress(emailSettings["FromEmail"]),
                     Subject = subject,
                     Body = body,
-                    IsBodyHtml = true // Set to true if you want HTML content in the email
+                    IsBodyHtml = true
                 };
 
                 mailMessage.To.Add(toEmail);
 
-                // Attach the invoice PDF
+
                 using (var memoryStream = new MemoryStream(attachmentData))
                 {
                     var attachment = new Attachment(memoryStream, attachmentName, "application/pdf");
